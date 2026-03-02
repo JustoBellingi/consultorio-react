@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 
-import Inicio from "./pages/inicio";
+import Inicio from "./pages/Inicio";
 import Servicios from "./pages/Servicios";
 import Sobre from "./pages/Sobre";
 import Contacto from "./pages/Contacto";
@@ -34,7 +34,7 @@ function App() {
     <div>
       {/* NAVBAR */}
       <nav className="navbar">
-        <div className="logo">Odontología SM</div>
+        <div className="logo">Odontología </div>
         <ul className="nav-links">
           <li><Link to="/">Inicio</Link></li>
           <li><Link to="/turnos">Turnos</Link></li>

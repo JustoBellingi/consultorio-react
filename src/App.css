@@ -6,24 +6,36 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Fondo global */
 body {
-  background-color: #f4f8fb;
+  background: linear-gradient(to bottom, #0a3d62, skyblue);
   color: #1e272e;
 }
 
 /* NAVBAR */
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
-  background-color: #0a3d62;
+  left: 0;
+  width: 100%;
+  background: rgba(10, 61, 98, 0.95);
+  backdrop-filter: blur(6px);
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 60px;
+  padding: 18px 40px;
   box-shadow: 0 3px 12px rgba(0,0,0,0.15);
   z-index: 1000;
 }
+
 
 .logo {
   font-size: 1.5rem;
@@ -33,51 +45,31 @@ body {
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 35px;
+  gap: 50px; /* más separación */
 }
 
 .nav-links a {
   color: white;
   text-decoration: none;
   font-weight: 500;
+  padding: 8px 14px; /* espacio interno */
+  border-radius: 6px;
   transition: 0.3s;
 }
 
 .nav-links a:hover {
+  background-color: #145da0; /* efecto hover */
   color: #82ccdd;
 }
 
-/* HERO */
-.hero {
-  height: 75vh;
-  background: linear-gradient(to right, #0a3d62, #3c6382);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
-
-.hero p {
-  font-size: 1.2rem;
-  opacity: 0.9;
-}
 
 /* SECCIONES */
 .section {
   padding: 80px 20px;
   text-align: center;
-  background-color: white;
-}
-
-.section.light {
-  background-color: #f0f4f8;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: transparent; /* deja ver el fondo global */
 }
 
 .section h2 {
@@ -93,82 +85,99 @@ body {
   font-size: 1rem;
 }
 
-/* CARDS */
-.cards {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 40px;
-  flex-wrap: wrap;
-}
-
-.card {
-  background: white;
-  padding: 30px;
-  width: 260px;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.card h3 {
-  margin-bottom: 10px;
-  color: #0a3d62;
-}
-
-/* FORMULARIOS */
-input, select, button {
-  padding: 10px;
-  margin: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-button {
-  background-color: #0a3d62;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background-color: #145da0;
-}
-
 /* FOOTER */
 .footer {
-  background-color: #0a3d62;
+  background: rgba(10, 61, 98, 0.9);
   color: white;
   padding: 30px;
   text-align: center;
   margin-top: 50px;
 }
 
-/* SCROLL SUAVE */
-html {
-  scroll-behavior: smooth;
+/* CONTENEDOR DE TURNOS */
+.turnos-container {
+  max-width: 800px;
+  margin: 50px auto;
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
-/* EVITAR DESBORDE HORIZONTAL */
-html, body {
-  overflow-x: hidden;
+/* TÍTULO */
+.turnos-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #0a3d62;
+  font-size: 2rem;
 }
 
-body {
-  width: 100%;
+/* FORMULARIO DE TURNOS */
+.turnos-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-/* NAVBAR MÁS RESPONSIVE */
-.navbar {
-  padding: 18px 40px;
+.turnos-form label {
+  font-weight: 600;
+  color: #1e272e;
 }
 
-.section {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+.turnos-form input,
+.turnos-form select {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: 0.3s;
+}
+
+.turnos-form input:focus,
+.turnos-form select:focus {
+  border-color: #0a3d62;
+  outline: none;
+  box-shadow: 0 0 6px rgba(10, 61, 98, 0.3);
+}
+
+.turnos-form button {
+  padding: 12px;
+  background-color: #0a3d62;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.turnos-form button:hover {
+  background-color: #145da0;
+}
+
+/* LISTA DE TURNOS RESERVADOS */
+.turnos-list {
+  margin-top: 40px;
+}
+
+.turno-card {
+  background: #f0f4f8;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.turno-card:hover {
+  transform: translateY(-3px);
+}
+
+.turno-card h3 {
+  margin-bottom: 8px;
+  color: #0a3d62;
+}
+
+.turno-card p {
+  margin: 4px 0;
+  font-size: 0.95rem;
 }
