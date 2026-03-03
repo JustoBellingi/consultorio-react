@@ -1,3 +1,4 @@
+import "./Servicios";
 function Servicios() {
   return (
     <section className="section">

@@ -52,12 +52,24 @@ function App() {
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/contacto" element={<Contacto />} />
       </Routes>
+      <a
+  href="https://wa.me/5492216900406"
+  className="whatsapp"
+  target="_blank"
+>
+  💬
+</a>
 
       <footer className="footer">
-        © 2026 Odontología SM - Todos los derechos reservados
+        © 2026 Odontología - Todos los derechos reservados
       </footer>
     </div>
+    
   );
+  
 }
 
+
+
 export default App;
+

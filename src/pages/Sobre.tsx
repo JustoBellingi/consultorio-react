@@ -1,12 +1,23 @@
+import "./Sobre.css";
+import odontologia from "../assets/odontologia.jpg";
+
 function Sobre() {
   return (
-    <section className="section">
-      <h2>Sobre Nosotros</h2>
-      <p>
-        Somos un consultorio odontológico con años de experiencia brindando
-        atención personalizada y tecnología moderna.
-      </p>
-    </section>
+    <div className="sobre-container">
+      <div className="sobre-grid">
+        <div className="sobre-texto">
+          <h1>Sobre Nosotros</h1>
+          <p>
+            Somos un consultorio odontológico dedicado a brindar atención
+            personalizada y profesional.
+          </p>
+        </div>
+
+        <div className="sobre-imagen">
+          <img src={odontologia} alt="Odontología" />
+        </div>
+      </div>
+    </div>
   );
 }
 

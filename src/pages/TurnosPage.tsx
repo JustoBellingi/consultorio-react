@@ -1,71 +1,116 @@
-import { useState } from "react";
-import type { Turno } from "../App";
+import { useState, useEffect } from "react";
+import "./TurnoPage.css";
+import Turnos from "../components/Turnos";
 
-interface TurnosPageProps {
-  setTurnosReservados: React.Dispatch<React.SetStateAction<Turno[]>>;
+interface Turno {
+  nombre: string;
+  apellido: string;
+  obraSocial: string;
+  fecha: string;
+  hora: string;
 }
 
-function TurnosPage({ setTurnosReservados }: TurnosPageProps) {
-  const [formData, setFormData] = useState<Turno>({
-    nombre: "",
-    apellido: "",
-    obraSocial: "",
-    fecha: "",
-    hora: "",
-  });
+function TurnosPage() {
+  const [turnosReservados, setTurnosReservados] = useState<Turno[]>([]);
+  const [error, setError] = useState("");
+  const [admin, setAdmin] = useState(false);
 
-  const [turnos, setTurnos] = useState<Turno[]>(() => {
+  // Cargar turnos guardados
+  useEffect(() => {
     const guardados = localStorage.getItem("turnos");
-    return guardados ? JSON.parse(guardados) : [];
-  });
+    if (guardados) {
+      setTurnosReservados(JSON.parse(guardados));
+    }
+  }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Guardar cada vez que cambian
+  useEffect(() => {
+    localStorage.setItem("turnos", JSON.stringify(turnosReservados));
+  }, [turnosReservados]);
+
+  const reservarTurno = (
+    nombre: string,
+    apellido: string,
+    obraSocial: string,
+    fecha: string,
+    hora: string
+  ) => {
+    if (!nombre || !apellido || !obraSocial || !fecha || !hora) {
+      setError("Completa todos los campos.");
+      return;
+    }
+
+    const hoy = new Date().toISOString().split("T")[0];
+    if (fecha < hoy) {
+      setError("No podés reservar días anteriores.");
+      return;
+    }
+
+    const turnoExistente = turnosReservados.find(
+      (t) => t.fecha === fecha && t.hora === hora
+    );
+
+    if (turnoExistente) {
+      setError("Ese turno ya está reservado.");
+      return;
+    }
+
+    const nuevoTurno: Turno = {
+      nombre,
+      apellido,
+      obraSocial,
+      fecha,
+      hora,
+    };
+
+    setTurnosReservados([...turnosReservados, nuevoTurno]);
+    setError("");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const nuevosTurnos = [...turnos, formData];
-    setTurnos(nuevosTurnos);
+  const eliminarTurno = (index: number) => {
+    const nuevosTurnos = [...turnosReservados];
+    nuevosTurnos.splice(index, 1);
     setTurnosReservados(nuevosTurnos);
-    setFormData({ nombre: "", apellido: "", obraSocial: "", fecha: "", hora: "" });
   };
 
   return (
-    <div className="turnos-container">
-      <h2>Reservar Turno</h2>
-      <form className="turnos-form" onSubmit={handleSubmit}>
-        <label>Nombre</label>
-        <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
+    <div className="turnos-page">
+      <div className="turnos-container">
+        <h1>Reservar Turno</h1>
 
-        <label>Apellido</label>
-        <input type="text" name="apellido" value={formData.apellido} onChange={handleChange} required />
+        <Turnos
+          onReservar={reservarTurno}
+          error={error}
+        />
 
-        <label>Obra Social</label>
-        <input type="text" name="obraSocial" value={formData.obraSocial} onChange={handleChange} />
+        <button
+          style={{ marginTop: "30px" }}
+          onClick={() => setAdmin(!admin)}
+        >
+          {admin ? "Ocultar turnos" : "Modo Admin"}
+        </button>
 
-        <label>Fecha</label>
-        <input type="date" name="fecha" value={formData.fecha} onChange={handleChange} required />
+        {admin && (
+          <div className="turnos-list">
+            <h2>Turnos Reservados</h2>
 
-        <label>Hora</label>
-        <input type="time" name="hora" value={formData.hora} onChange={handleChange} required />
-
-        <button type="submit">Reservar</button>
-      </form>
-
-      <div className="turnos-list">
-        <h2>Turnos Reservados</h2>
-        {turnos.length === 0 ? (
-          <p>No hay turnos reservados aún.</p>
-        ) : (
-          turnos.map((t, index) => (
-            <div key={index} className="turno-card">
-              <h3>{t.nombre} {t.apellido}</h3>
-              <p>Obra Social: {t.obraSocial || "No especificada"}</p>
-              <p>Fecha: {t.fecha}</p>
-              <p>Hora: {t.hora}</p>
-            </div>
-          ))
+            {turnosReservados.length === 0 ? (
+              <p>No hay turnos reservados.</p>
+            ) : (
+              turnosReservados.map((turno, index) => (
+                <div key={index} className="turno-card">
+                  <p><strong>Nombre:</strong> {turno.nombre}</p>
+                  <p><strong>Apellido:</strong> {turno.apellido}</p>
+                  <p><strong>Obra Social:</strong> {turno.obraSocial}</p>
+                  <p><strong>Fecha:</strong> {turno.fecha}</p>
+                  <p><strong>Hora:</strong> {turno.hora}</p>
+                  <button onClick={() => eliminarTurno(index)}>
+                    Eliminar
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
         )}
       </div>
     </div>

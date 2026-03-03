@@ -1,39 +1,26 @@
 import { useState } from "react";
-import type { Turno } from "../App";
 
-interface Props {
-  setTurnosReservados: React.Dispatch<React.SetStateAction<Turno[]>>;
+interface TurnosProps {
+  onReservar: (
+    nombre: string,
+    apellido: string,
+    obraSocial: string,
+    fecha: string,
+    hora: string
+  ) => void;
+  error: string;
 }
 
-
-function Turnos({ setTurnosReservados }: Props) {
+function Turnos({ onReservar, error }: TurnosProps) {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [obraSocial, setObraSocial] = useState("");
   const [fecha, setFecha] = useState("");
   const [hora, setHora] = useState("");
 
-  const reservarTurno = () => {
-    if (!nombre || !apellido || !obraSocial || !fecha || !hora) {
-      alert("Por favor completá todos los campos.");
-      return;
-    }
-
-    const nuevoTurno = { nombre, apellido, obraSocial, fecha, hora };
-
-    setTurnosReservados((prev) => {
-      // 🚫 VALIDAR TURNO DUPLICADO
-      const turnoExistente = prev.find(
-        (t) => t.fecha === fecha && t.hora === hora
-      );
-
-      if (turnoExistente) {
-        alert("Ese horario ya está reservado.");
-        return prev;
-      }
-
-      return [...prev, nuevoTurno];
-    });
+  const manejarEnvio = (e: React.FormEvent) => {
+    e.preventDefault();
+    onReservar(nombre, apellido, obraSocial, fecha, hora);
 
     setNombre("");
     setApellido("");
@@ -43,7 +30,7 @@ function Turnos({ setTurnosReservados }: Props) {
   };
 
   return (
-    <div>
+    <form className="turnos-form" onSubmit={manejarEnvio}>
       <input
         type="text"
         placeholder="Nombre"
@@ -58,12 +45,17 @@ function Turnos({ setTurnosReservados }: Props) {
         onChange={(e) => setApellido(e.target.value)}
       />
 
-      <input
-        type="text"
-        placeholder="Obra Social"
+      <select
         value={obraSocial}
         onChange={(e) => setObraSocial(e.target.value)}
-      />
+      >
+        <option value="">Seleccionar Obra Social</option>
+        <option value="OSDE">OSDE</option>
+        <option value="IOMA">IOMA</option>
+        <option value="Swiss Medical">Swiss Medical</option>
+        <option value="Galeno">Galeno</option>
+        <option value="Particular">Particular</option>
+      </select>
 
       <input
         type="date"
@@ -73,12 +65,15 @@ function Turnos({ setTurnosReservados }: Props) {
 
       <input
         type="time"
+        step="1800"
         value={hora}
         onChange={(e) => setHora(e.target.value)}
       />
 
-      <button onClick={reservarTurno}>Reservar</button>
-    </div>
+      <button type="submit">Reservar Turno</button>
+
+      {error && <p className="error">{error}</p>}
+    </form>
   );
 }
 
