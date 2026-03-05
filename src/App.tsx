@@ -2,74 +2,91 @@ import { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 
+import ChatBot from "./components/ChatBot";
 import Inicio from "./pages/Inicio";
 import Servicios from "./pages/Servicios";
 import Sobre from "./pages/Sobre";
 import Contacto from "./pages/Contacto";
 import TurnosPage from "./pages/TurnosPage";
 
-export interface Turno {
-  nombre: string;
-  apellido: string;
-  obraSocial: string;
-  fecha: string;
-  hora: string;
-}
+import type { Turno } from "./types/Turno";
 
 function App() {
   const [turnosReservados, setTurnosReservados] = useState<Turno[]>([]);
 
+  // Cargar turnos guardados
   useEffect(() => {
-    const guardados = localStorage.getItem("turnos");
-    if (guardados) {
-      setTurnosReservados(JSON.parse(guardados));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("turnos", JSON.stringify(turnosReservados));
-  }, [turnosReservados]);
-
+  fetch("http://localhost:3001/turnos")
+    .then((res) => res.json())
+    .then((data) => {
+      setTurnosReservados(data);
+    })
+    .catch((err) => {
+      console.error("Error cargando turnos:", err);
+    });
+}, []);
   return (
     <div>
-      {/* NAVBAR */}
+      <ChatBot />
+
       <nav className="navbar">
-        <div className="logo">Odontología </div>
+        <div className="logo">Odontología</div>
+
         <ul className="nav-links">
-          <li><Link to="/">Inicio</Link></li>
-          <li><Link to="/turnos">Turnos</Link></li>
-          <li><Link to="/servicios">Servicios</Link></li>
-          <li><Link to="/sobre">Sobre Nosotros</Link></li>
-          <li><Link to="/contacto">Contacto</Link></li>
+          <li>
+            <Link to="/">Inicio</Link>
+          </li>
+
+          <li>
+            <Link to="/turnos">Turnos</Link>
+          </li>
+
+          <li>
+            <Link to="/servicios">Servicios</Link>
+          </li>
+
+          <li>
+            <Link to="/sobre">Sobre Nosotros</Link>
+          </li>
+
+          <li>
+            <Link to="/contacto">Contacto</Link>
+          </li>
         </ul>
       </nav>
 
-      {/* RUTAS */}
       <Routes>
         <Route path="/" element={<Inicio />} />
-        <Route path="/turnos" element={<TurnosPage setTurnosReservados={setTurnosReservados} />} />
+
+        <Route
+          path="/turnos"
+          element={
+            <TurnosPage
+              turnosReservados={turnosReservados}
+              setTurnosReservados={setTurnosReservados}
+            />
+          }
+        />
+
         <Route path="/servicios" element={<Servicios />} />
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/contacto" element={<Contacto />} />
       </Routes>
+
       <a
-  href="https://wa.me/5492216900406"
-  className="whatsapp"
-  target="_blank"
->
-  💬
-</a>
+        href="https://wa.me/5492216900406"
+        className="whatsapp"
+        target="_blank"
+        rel="noreferrer"
+      >
+        💬
+      </a>
 
       <footer className="footer">
         © 2026 Odontología - Todos los derechos reservados
       </footer>
     </div>
-    
   );
-  
 }
 
-
-
 export default App;
-
