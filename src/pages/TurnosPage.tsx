@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./TurnoPage.css";
 import Turnos from "../components/Turnos";
 import type { Turno } from "../types/Turno";
+import AdminLogin from "./AdminLogin";
 
 interface TurnosPageProps {
   turnosReservados: Turno[];
@@ -12,8 +13,11 @@ function TurnosPage({ turnosReservados, setTurnosReservados }: TurnosPageProps) 
 
   const [error, setError] = useState("");
   const [admin, setAdmin] = useState(false);
+  const [mostrarLogin, setMostrarLogin] = useState(false);
 
-  // Cargar turnos desde MySQL
+  // ===============================
+  // CARGAR TURNOS DESDE MYSQL
+  // ===============================
   const cargarTurnos = async () => {
     try {
       const res = await fetch("http://localhost:3001/turnos");
@@ -29,6 +33,9 @@ function TurnosPage({ turnosReservados, setTurnosReservados }: TurnosPageProps) 
     cargarTurnos();
   }, []);
 
+  // ===============================
+  // RESERVAR TURNO
+  // ===============================
   const reservarTurno = async (
     nombre: string,
     apellido: string,
@@ -76,7 +83,6 @@ function TurnosPage({ turnosReservados, setTurnosReservados }: TurnosPageProps) 
         body: JSON.stringify(nuevoTurno),
       });
 
-      // Volver a cargar desde MySQL
       await cargarTurnos();
 
       setError("");
@@ -87,10 +93,14 @@ function TurnosPage({ turnosReservados, setTurnosReservados }: TurnosPageProps) 
     }
   };
 
+  // ===============================
+  // ELIMINAR TURNO
+  // ===============================
   const eliminarTurno = (index: number) => {
 
     const nuevosTurnos = [...turnosReservados];
     nuevosTurnos.splice(index, 1);
+
     setTurnosReservados(nuevosTurnos);
 
   };
@@ -107,13 +117,25 @@ function TurnosPage({ turnosReservados, setTurnosReservados }: TurnosPageProps) 
           turnosReservados={turnosReservados}
         />
 
+        {/* BOTON ADMIN */}
         <button
           style={{ marginTop: "30px" }}
-          onClick={() => setAdmin(!admin)}
+          onClick={() => setMostrarLogin(true)}
         >
-          {admin ? "Ocultar turnos" : "Modo Admin"}
+          Modo Admin
         </button>
 
+        {/* LOGIN ADMIN */}
+        {mostrarLogin && !admin && (
+          <AdminLogin
+            onLogin={() => {
+              setAdmin(true);
+              setMostrarLogin(false);
+            }}
+          />
+        )}
+
+        {/* PANEL ADMIN */}
         {admin && (
           <div className="turnos-list">
 

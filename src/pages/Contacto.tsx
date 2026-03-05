@@ -11,8 +11,8 @@ export default function Contacto() {
           <h2>CTD - Centro de terapias para el desarrollo</h2>
 
           <p><strong>📍 Dirección:</strong> C. 471 1592, B1896AJF City Bell, Provincia de Buenos Aires</p>
-          <p><strong>📞 Teléfono:</strong> 221-XXXXXXX</p>
-          <p><strong>💬 WhatsApp:</strong> 221-XXXXXXX</p>
+          <p><strong>📞 Teléfono:</strong> 221 511 -7589</p>
+          <p><strong>💬 WhatsApp:</strong> 221 511 -7589</p>
           <p><strong>🕒 Horarios:</strong></p>
           <ul>
             <li>Lunes a Viernes: 9:00 - 18:00</li>
@@ -20,7 +20,7 @@ export default function Contacto() {
           </ul>
 
           <a
-            href="https://wa.me/5492216900406"
+            href="https://wa.me/5492215117589"
             className="btn-contacto"
             target="_blank"
             rel="noopener noreferrer"

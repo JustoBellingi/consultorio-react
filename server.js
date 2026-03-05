@@ -33,14 +33,20 @@ db.connect((err) => {
 // ===============================
 app.get("/turnos", (req, res) => {
 
-  console.log("Alguien pidió los turnos");
-
-  const sql = "SELECT * FROM turnos";
+  const sql = `
+  SELECT 
+  id,
+  nombre,
+  apellido,
+  obraSocial,
+  DATE_FORMAT(fecha,'%Y-%m-%d') as fecha,
+  hora
+  FROM turnos
+  `;
 
   db.query(sql, (err, result) => {
 
     if (err) {
-      console.log(err);
       res.status(500).send(err);
       return;
     }
