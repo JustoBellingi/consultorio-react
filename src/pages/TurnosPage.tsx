@@ -1,42 +1,37 @@
 import { useState, useEffect } from "react";
-import "./TurnoPage.css";
+import "./TurnosPage.css";
 import Turnos from "../components/Turnos";
-import type { Turno } from "../types/Turno";
-import AdminLogin from "./AdminLogin";
 
-interface TurnosPageProps {
-  turnosReservados: Turno[];
-  setTurnosReservados: React.Dispatch<React.SetStateAction<Turno[]>>;
+interface Turno {
+  nombre: string;
+  apellido: string;
+  obraSocial: string;
+  fecha: string;
+  hora: string;
 }
 
-function TurnosPage({ turnosReservados, setTurnosReservados }: TurnosPageProps) {
-
+function TurnosPage() {
+  const [turnosReservados, setTurnosReservados] = useState<Turno[]>([]);
   const [error, setError] = useState("");
+  const [mensaje, setMensaje] = useState("");
   const [admin, setAdmin] = useState(false);
-  const [mostrarLogin, setMostrarLogin] = useState(false);
 
-  // ===============================
-  // CARGAR TURNOS DESDE MYSQL
-  // ===============================
-  const cargarTurnos = async () => {
-    try {
-      const res = await fetch("http://localhost:3001/turnos");
-      const data = await res.json();
-      setTurnosReservados(data);
-    } catch (err) {
-      console.error("Error cargando turnos:", err);
-    }
-  };
-
-  // Cuando se abre la página
+  // cargar turnos guardados
   useEffect(() => {
-    cargarTurnos();
+    const guardados = localStorage.getItem("turnos");
+
+    if (guardados) {
+      setTurnosReservados(JSON.parse(guardados));
+    }
   }, []);
 
-  // ===============================
-  // RESERVAR TURNO
-  // ===============================
-  const reservarTurno = async (
+  // guardar turnos
+  useEffect(() => {
+    localStorage.setItem("turnos", JSON.stringify(turnosReservados));
+  }, [turnosReservados]);
+
+  // reservar turno
+  const reservarTurno = (
     nombre: string,
     apellido: string,
     obraSocial: string,
@@ -56,12 +51,12 @@ function TurnosPage({ turnosReservados, setTurnosReservados }: TurnosPageProps) 
       return;
     }
 
-    const turnoExistente = turnosReservados.find(
+    const ocupado = turnosReservados.find(
       (t) => t.fecha === fecha && t.hora === hora
     );
 
-    if (turnoExistente) {
-      setError("Ese turno ya está reservado.");
+    if (ocupado) {
+      setError("Ese horario ya está reservado.");
       return;
     }
 
@@ -70,40 +65,43 @@ function TurnosPage({ turnosReservados, setTurnosReservados }: TurnosPageProps) 
       apellido,
       obraSocial,
       fecha,
-      hora,
+      hora
     };
 
-    try {
+    setTurnosReservados([...turnosReservados, nuevoTurno]);
+    setError("");
+    setMensaje("✅ Turno reservado correctamente");
+  };
 
-      await fetch("http://localhost:3001/turnos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(nuevoTurno),
-      });
+  // eliminar turno
+  const eliminarTurno = (index: number) => {
 
-      await cargarTurnos();
+    if (!window.confirm("¿Eliminar este turno?")) return;
 
-      setError("");
+    const nuevos = [...turnosReservados];
+    nuevos.splice(index, 1);
 
-    } catch (err) {
-      console.error(err);
-      setError("Error al conectar con el servidor.");
+    setTurnosReservados(nuevos);
+  };
+
+  // activar modo admin
+  const activarAdmin = () => {
+
+    const pass = prompt("Contraseña admin");
+
+    if (pass === "Justo0406") {
+      setAdmin(!admin);
+    } else {
+      alert("Contraseña incorrecta");
     }
   };
 
-  // ===============================
-  // ELIMINAR TURNO
-  // ===============================
-  const eliminarTurno = (index: number) => {
-
-    const nuevosTurnos = [...turnosReservados];
-    nuevosTurnos.splice(index, 1);
-
-    setTurnosReservados(nuevosTurnos);
-
-  };
+  // ordenar turnos por fecha
+  const turnosOrdenados = [...turnosReservados].sort(
+    (a, b) =>
+      new Date(a.fecha + " " + a.hora).getTime() -
+      new Date(b.fecha + " " + b.hora).getTime()
+  );
 
   return (
     <div className="turnos-page">
@@ -114,50 +112,42 @@ function TurnosPage({ turnosReservados, setTurnosReservados }: TurnosPageProps) 
         <Turnos
           onReservar={reservarTurno}
           error={error}
+          mensaje={mensaje}
           turnosReservados={turnosReservados}
         />
 
-        {/* BOTON ADMIN */}
         <button
           style={{ marginTop: "30px" }}
-          onClick={() => setMostrarLogin(true)}
+          onClick={activarAdmin}
         >
-          Modo Admin
+          {admin ? "Ocultar turnos" : "Modo Admin"}
         </button>
 
-        {/* LOGIN ADMIN */}
-        {mostrarLogin && !admin && (
-          <AdminLogin
-            onLogin={() => {
-              setAdmin(true);
-              setMostrarLogin(false);
-            }}
-          />
-        )}
-
-        {/* PANEL ADMIN */}
         {admin && (
           <div className="turnos-list">
 
             <h2>Turnos Reservados</h2>
 
-            {turnosReservados.length === 0 ? (
+            {turnosOrdenados.length === 0 ? (
               <p>No hay turnos reservados.</p>
             ) : (
-              turnosReservados.map((turno, index) => (
-                <div key={index} className="turno-card">
 
-                  <p><strong>Nombre:</strong> {turno.nombre}</p>
-                  <p><strong>Apellido:</strong> {turno.apellido}</p>
-                  <p><strong>Obra Social:</strong> {turno.obraSocial}</p>
-                  <p><strong>Fecha:</strong> {turno.fecha}</p>
-                  <p><strong>Hora:</strong> {turno.hora}</p>
+              turnosOrdenados.map((t, i) => (
 
-                  <button onClick={() => eliminarTurno(index)}>
-                    Cancelar turno
+                <div key={i} className="turno-card">
+
+                  <p><b>Nombre:</b> {t.nombre}</p>
+                  <p><b>Apellido:</b> {t.apellido}</p>
+                  <p><b>Obra Social:</b> {t.obraSocial}</p>
+                  <p><b>Fecha:</b> {t.fecha}</p>
+                  <p><b>Hora:</b> {t.hora}</p>
+
+                  <button onClick={() => eliminarTurno(i)}>
+                    Eliminar
                   </button>
 
                 </div>
+
               ))
             )}
 

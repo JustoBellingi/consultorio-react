@@ -1,0 +1,83 @@
+body {
+  background-color: #f4f6fb;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.turnos-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding-top: 50px;
+}
+
+.turnos-container {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+.turnos-container h1 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.form-turnos {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-turnos input,
+.form-turnos select {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: 0.2s;
+}
+
+.form-turnos input:focus,
+.form-turnos select:focus {
+  border-color: #2b7cff;
+  outline: none;
+}
+
+.form-turnos button {
+  padding: 14px;
+  font-size: 16px;
+  border: none;
+  background-color: #2b7cff;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.form-turnos button:hover {
+  background-color: #1a5fd1;
+}
+
+.turnos-list {
+  margin-top: 40px;
+}
+
+.turno-card {
+  border: 1px solid #eee;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.turno-card button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: none;
+  background: crimson;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}

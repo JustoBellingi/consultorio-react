@@ -8,8 +8,8 @@ import Servicios from "./pages/Servicios";
 import Sobre from "./pages/Sobre";
 import Contacto from "./pages/Contacto";
 import TurnosPage from "./pages/TurnosPage";
-
 import type { Turno } from "./types/Turno";
+import Footer from "./components/Footer";
 
 function App() {
   const [turnosReservados, setTurnosReservados] = useState<Turno[]>([]);
@@ -58,15 +58,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Inicio />} />
 
-        <Route
-          path="/turnos"
-          element={
-            <TurnosPage
-              turnosReservados={turnosReservados}
-              setTurnosReservados={setTurnosReservados}
-            />
-          }
-        />
+        <Route path="/turnos" element={<TurnosPage />} />
 
         <Route path="/servicios" element={<Servicios />} />
         <Route path="/sobre" element={<Sobre />} />
@@ -82,9 +74,7 @@ function App() {
         💬
       </a>
 
-      <footer className="footer">
-        © 2026 Odontología - Todos los derechos reservados
-      </footer>
+      <Footer />
     </div>
   );
 }
