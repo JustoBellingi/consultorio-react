@@ -91,6 +91,36 @@ app.post("/turnos", (req, res) => {
 
 });
 
+// ===============================
+// ACTUALIZAR TURNO
+// ===============================
+app.put("/turnos/:id", (req, res) => {
+
+  const { id } = req.params;
+  const { nombre, apellido, obraSocial, fecha, hora } = req.body;
+
+  const sql = `
+    UPDATE turnos
+    SET nombre = ?, apellido = ?, obraSocial = ?, fecha = ?, hora = ?
+    WHERE id = ?
+  `;
+
+  db.query(sql, [nombre, apellido, obraSocial, fecha, hora, id], (err, result) => {
+
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error al actualizar turno");
+      return;
+    }
+
+    res.json({
+      mensaje: "Turno actualizado correctamente"
+    });
+
+  });
+
+});
+
 
 // ===============================
 // ELIMINAR TURNO

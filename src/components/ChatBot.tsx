@@ -28,7 +28,7 @@ function ChatBot() {
         "Los horarios disponibles se actualizan en tiempo real en la sección de turnos.";
     } else if (option === "Contacto") {
       botResponse.text =
-        "Puede comunicarse al 221-123-4567.";
+        "Puede comunicarse al 221 511 -7589.";
     }
 
     setMessages([...messages, userMessage, botResponse]);
