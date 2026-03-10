@@ -13,6 +13,7 @@ import Footer from "./components/Footer";
 
 function App() {
   const [turnosReservados, setTurnosReservados] = useState<Turno[]>([]);
+  console.log(turnosReservados);
 
   // Cargar turnos guardados
   useEffect(() => {
