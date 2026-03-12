@@ -1,9 +1,9 @@
 import express from "express";
-import pg from "pg"; // Cambiamos mysql2 por pg
+import pg from "pg"; // Asegurate de haber instalado 'pg' (npm install pg)
 import cors from "cors";
 import dotenv from "dotenv";
 
-dotenv.config(); // Carga las variables del archivo .env (localmente)
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -14,21 +14,24 @@ app.use(express.json());
 // ===============================
 const { Pool } = pg;
 
-// Usamos la variable de entorno que pusiste en Render
+// Aquí está el truco: usamos la variable de Render
 const db = new Pool({
-  connectionString: process.env.postgresql_url,//postgres:justoconsultorio0406@db.mhtnskpagdkejgiptlbw.supabase.co:5432/postgres,
+  connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false // Necesario para conectar a Supabase desde Render
+    rejectUnauthorized: false
   }
 });
 
+// Cambiamos el log para saber que es Postgres
 db.connect((err) => {
   if (err) {
-    console.log("Error conectando a Supabase (Postgres):", err);
+    console.log("Error conectando a Supabase:", err);
   } else {
-    console.log("Conectado exitosamente a Supabase");
+    console.log("¡Conectado exitosamente a Supabase!");
   }
 });
+
+// ... el resto de tus rutas (GET /turnos, POST /turnos)
 
 // ===============================
 // OBTENER TODOS LOS TURNOS
