@@ -17,7 +17,8 @@ function App() {
 
   // Cargar turnos guardados
   useEffect(() => {
-  fetch("http://localhost:3001/turnos")
+  // REEMPLAZA ESTA URL por la que te dio Render (la que termina en .onrender.com)
+  fetch("https://consultorio-react-1.onrender.com/turnos") 
     .then((res) => res.json())
     .then((data) => {
       setTurnosReservados(data);

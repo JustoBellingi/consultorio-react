@@ -3,9 +3,10 @@ import "./TurnosPage.css";
 import Turnos from "../components/Turnos";
 
 interface Turno {
+  id?: number; // Agregamos el ID que viene de la base de datos
   nombre: string;
   apellido: string;
-  obraSocial: string;
+  obra_social: string; // Usamos snake_case como en la DB
   fecha: string;
   hora: string;
 }
@@ -16,36 +17,36 @@ function TurnosPage() {
   const [mensaje, setMensaje] = useState("");
   const [admin, setAdmin] = useState(false);
 
-  // cargar turnos guardados
-  useEffect(() => {
-    const guardados = localStorage.getItem("turnos");
+  // URL DE TU BACKEND EN RENDER (Cambiala por la tuya exacta)
+  const API_URL = "https://consultorio-react-1.onrender.com/turnos";
 
-    if (guardados) {
-      setTurnosReservados(JSON.parse(guardados));
-    }
+  // 1. CARGAR TURNOS DESDE EL BACKEND
+  useEffect(() => {
+    fetch(API_URL)
+      .then((res) => res.json())
+      .then((data) => {
+        setTurnosReservados(data);
+      })
+      .catch((err) => {
+        console.error("Error cargando turnos:", err);
+        setError("No se pudieron cargar los turnos del servidor.");
+      });
   }, []);
 
-  // guardar turnos
-  useEffect(() => {
-    localStorage.setItem("turnos", JSON.stringify(turnosReservados));
-  }, [turnosReservados]);
-
-  // reservar turno
-  const reservarTurno = (
+  // 2. RESERVAR TURNO (ENVIAR AL BACKEND)
+  const reservarTurno = async (
     nombre: string,
     apellido: string,
-    obraSocial: string,
+    obra_social: string,
     fecha: string,
     hora: string
   ) => {
-
-    if (!nombre || !apellido || !obraSocial || !fecha || !hora) {
+    if (!nombre || !apellido || !obra_social || !fecha || !hora) {
       setError("Completa todos los campos.");
       return;
     }
 
     const hoy = new Date().toISOString().split("T")[0];
-
     if (fecha < hoy) {
       setError("No podés reservar días anteriores.");
       return;
@@ -54,41 +55,54 @@ function TurnosPage() {
     const ocupado = turnosReservados.find(
       (t) => t.fecha === fecha && t.hora === hora
     );
-
     if (ocupado) {
       setError("Ese horario ya está reservado.");
       return;
     }
 
-    const nuevoTurno: Turno = {
-      nombre,
-      apellido,
-      obraSocial,
-      fecha,
-      hora
-    };
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, apellido, obra_social, fecha, hora }),
+      });
 
-    setTurnosReservados([...turnosReservados, nuevoTurno]);
-    setError("");
-    setMensaje("✅ Turno reservado correctamente");
+      if (!response.ok) throw new Error("Error en el servidor");
+
+      const nuevoTurnoGuardado = await response.json();
+
+      // Actualizamos el estado local con lo que nos devolvió el backend
+      setTurnosReservados([...turnosReservados, nuevoTurnoGuardado]);
+      setError("");
+      setMensaje("✅ Turno reservado correctamente en Supabase");
+    } catch (err) {
+      console.error(err);
+      setError("Hubo un error al guardar el turno. Reintentá.");
+    }
   };
 
-  // eliminar turno
-  const eliminarTurno = (index: number) => {
+  // 3. ELIMINAR TURNO DEL BACKEND
+  const eliminarTurno = async (id: number | undefined, index: number) => {
+    if (!id) return; // Si no tiene ID, no podemos borrarlo en la DB
+    if (!window.confirm("¿Eliminar este turno definitivamente?")) return;
 
-    if (!window.confirm("¿Eliminar este turno?")) return;
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+      });
 
-    const nuevos = [...turnosReservados];
-    nuevos.splice(index, 1);
-
-    setTurnosReservados(nuevos);
+      if (response.ok) {
+        const nuevos = [...turnosReservados];
+        nuevos.splice(index, 1);
+        setTurnosReservados(nuevos);
+      }
+    } catch (err) {
+      setError("No se pudo eliminar el turno.");
+    }
   };
 
-  // activar modo admin
   const activarAdmin = () => {
-
     const pass = prompt("Contraseña admin");
-
     if (pass === "Justo0406") {
       setAdmin(!admin);
     } else {
@@ -96,7 +110,6 @@ function TurnosPage() {
     }
   };
 
-  // ordenar turnos por fecha
   const turnosOrdenados = [...turnosReservados].sort(
     (a, b) =>
       new Date(a.fecha + " " + a.hora).getTime() -
@@ -106,7 +119,6 @@ function TurnosPage() {
   return (
     <div className="turnos-page">
       <div className="turnos-container">
-
         <h1>Reservar Turno</h1>
 
         <Turnos
@@ -116,44 +128,31 @@ function TurnosPage() {
           turnosReservados={turnosReservados}
         />
 
-        <button
-          style={{ marginTop: "30px" }}
-          onClick={activarAdmin}
-        >
+        <button style={{ marginTop: "30px" }} onClick={activarAdmin}>
           {admin ? "Ocultar turnos" : "Modo Admin"}
         </button>
 
         {admin && (
           <div className="turnos-list">
-
-            <h2>Turnos Reservados</h2>
-
+            <h2>Turnos Reservados (Panel Admin)</h2>
             {turnosOrdenados.length === 0 ? (
               <p>No hay turnos reservados.</p>
             ) : (
-
               turnosOrdenados.map((t, i) => (
-
-                <div key={i} className="turno-card">
-
+                <div key={t.id || i} className="turno-card">
                   <p><b>Nombre:</b> {t.nombre}</p>
                   <p><b>Apellido:</b> {t.apellido}</p>
-                  <p><b>Obra Social:</b> {t.obraSocial}</p>
+                  <p><b>Obra Social:</b> {t.obra_social}</p>
                   <p><b>Fecha:</b> {t.fecha}</p>
                   <p><b>Hora:</b> {t.hora}</p>
-
-                  <button onClick={() => eliminarTurno(i)}>
+                  <button onClick={() => eliminarTurno(t.id, i)}>
                     Eliminar
                   </button>
-
                 </div>
-
               ))
             )}
-
           </div>
         )}
-
       </div>
     </div>
   );
