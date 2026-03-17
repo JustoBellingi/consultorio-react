@@ -1,9 +1,8 @@
 import express from "express";
-import pg from "pg"; // Asegurate de haber instalado 'pg' (npm install pg)
+import pkg from "pg";
 import cors from "cors";
-import dotenv from "dotenv";
 
-dotenv.config();
+const { Pool } = pkg;
 
 const app = express();
 app.use(cors());
@@ -12,9 +11,6 @@ app.use(express.json());
 // ===============================
 // CONEXIÓN A POSTGRESQL (SUPABASE)
 // ===============================
-const { Pool } = pg;
-
-// Aquí está el truco: usamos la variable de Render
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -22,28 +18,32 @@ const db = new Pool({
   }
 });
 
-// Cambiamos el log para saber que es Postgres
-
-// ... el resto de tus rutas (GET /turnos, POST /turnos)
+// TEST DE CONEXIÓN (MUY IMPORTANTE)
+db.connect()
+  .then(() => console.log("✅ Conectado a PostgreSQL"))
+  .catch(err => console.error("❌ Error de conexión:", err));
 
 // ===============================
 // OBTENER TODOS LOS TURNOS
 // ===============================
-app.get("/turnos", (req, res) => {
-  const sql = `
-    SELECT 
-    id,
-    nombre,
-    apellido,
-    obra_social, -- CAMBIADO AQUÍ
-    TO_CHAR(fecha, 'YYYY-MM-DD') as fecha,
-    hora
-    FROM turnos
-  `;
-  db.query(sql, (err, result) => {
-    if (err) return res.status(500).send(err);
+app.get("/turnos", async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT 
+        id,
+        nombre,
+        apellido,
+        obra_social,
+        TO_CHAR(fecha, 'YYYY-MM-DD') as fecha,
+        hora
+      FROM turnos
+    `);
+
     res.json(result.rows);
-  });
+  } catch (err) {
+    console.error("ERROR GET /turnos:", err);
+    res.status(500).json(err);
+  }
 });
 
 // ===============================
@@ -53,49 +53,37 @@ app.post("/turnos", async (req, res) => {
   const { nombre, apellido, obra_social, fecha, hora } = req.body;
 
   try {
-    const sql = `
-      INSERT INTO turnos (nombre, apellido, obra_social, fecha, hora)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING id
-    `;
+    const result = await db.query(
+      `INSERT INTO turnos (nombre, apellido, obra_social, fecha, hora)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *`,
+      [nombre, apellido, obra_social, fecha, hora]
+    );
 
-    const result = await db.query(sql, [nombre, apellido, obra_social, fecha, hora]);
-
-    res.json({
-      id: result.rows[0].id,
-      nombre,
-      apellido,
-      obra_social,
-      fecha,
-      hora
-    });
+    res.json(result.rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error al guardar turno en Supabase");
+    console.error("ERROR POST /turnos:", err);
+    res.status(500).json(err);
   }
 });
 
-
+// ===============================
+// DEBUG
+// ===============================
 app.get("/debug-turnos", async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM turnos");
     res.json(result.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).send(err);
+    console.error("ERROR DEBUG:", err);
+    res.status(500).json(err);
   }
 });
 
-// ... El resto de tus rutas (PUT y DELETE) seguirían la misma lógica:
-// 1. Usar $1, $2 en lugar de ?
-// 2. Acceder a result.rows
-// 3. Ojo con las mayúsculas en los nombres de columnas (usar "obraSocial" con comillas dobles si en la tabla está así)
-
 // ===============================
-// INICIAR SERVIDOR
+// INICIO SERVIDOR
 // ===============================
-// Render asigna un puerto automático, por eso usamos process.env.PORT
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
