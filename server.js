@@ -23,13 +23,6 @@ const db = new Pool({
 });
 
 // Cambiamos el log para saber que es Postgres
-db.connect((err) => {
-  if (err) {
-    console.log("Error conectando a Supabase:", err);
-  } else {
-    console.log("¡Conectado exitosamente a Supabase!");
-  }
-});
 
 // ... el resto de tus rutas (GET /turnos, POST /turnos)
 
