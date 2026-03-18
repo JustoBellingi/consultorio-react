@@ -2,18 +2,18 @@ import express from "express";
 import pkg from "pg";
 import cors from "cors";
 
+
 const { Pool } = pkg;
+
+const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ===============================
-// CONEXIÓN A POSTGRESQL (SUPABASE)
-// ===============================
-const db = new Pool({
-  connectionString: process.env.DATABASE_URL
-});
+app.use(express.static("public"));
 // TEST DE CONEXIÓN (MUY IMPORTANTE)
 db.connect()
   .then(() => console.log("✅ Conectado a PostgreSQL"))
