@@ -12,12 +12,8 @@ app.use(express.json());
 // CONEXIÓN A POSTGRESQL (SUPABASE)
 // ===============================
 const db = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  connectionString: process.env.DATABASE_URL
 });
-
 // TEST DE CONEXIÓN (MUY IMPORTANTE)
 db.connect()
   .then(() => console.log("✅ Conectado a PostgreSQL"))
