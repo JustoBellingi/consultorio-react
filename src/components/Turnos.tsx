@@ -7,7 +7,10 @@ interface Props {
   turnosReservados: any[];
 }
 
+
 function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
+
+  
 
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
@@ -47,22 +50,23 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
     <div className="form-turnos">
 
       <input
-        placeholder="Nombre"
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-      />
+  placeholder="👤 Nombre"
+  value={nombre}
+  required
+  onChange={(e) => setNombre(e.target.value)}
+/>
 
-      <input
-        placeholder="Apellido"
-        value={apellido}
-        onChange={(e) => setApellido(e.target.value)}
-      />
-
+<input
+  placeholder="👤 Apellido"
+  value={apellido}
+  required
+  onChange={(e) => setApellido(e.target.value)}
+/>
       <select
         value={obraSocial}
         onChange={(e) => setObraSocial(e.target.value)}
       >
-        <option value="">Obra Social</option>
+        <option value="">🏥 Obra Social</option>
         <option>IOMA</option>
         <option>OSDE</option>
         <option>Swiss Medical</option>
@@ -77,7 +81,7 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
 
           const dia = new Date(e.target.value).getDay();
 
-          if (dia === 0 || dia === 6) {
+          if (dia === 0 || dia === 4) {
             alert("No atendemos fines de semana");
             return;
           }
@@ -90,7 +94,7 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
         value={hora}
         onChange={(e) => setHora(e.target.value)}
       >
-        <option value="">Horario</option>
+        <option value="">⏰ Horario</option>
 
         {horariosDisponibles.map((h) => (
           <option key={h}>{h}</option>
@@ -98,7 +102,7 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
       </select>
 
       <button onClick={reservar}>
-        Reservar turno
+       📅 Reservar turno
       </button>
 
       {error && <p style={{color:"red"}}>{error}</p>}
@@ -107,5 +111,7 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
     </div>
   );
 }
+
+
 
 export default Turnos;

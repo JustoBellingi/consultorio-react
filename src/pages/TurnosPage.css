@@ -1,83 +1,99 @@
-body {
-  background-color: #f4f6fb;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 .turnos-page {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding-top: 50px;
+  align-items: center;
+  background: linear-gradient(135deg, #dbeafe, #60a5fa);
+  font-family: "Segoe UI", sans-serif;
 }
 
+/* Tarjeta */
 .turnos-container {
   background: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 500px;
+  padding: 30px;
+  border-radius: 20px;
+  width: 360px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  animation: fadeIn 0.5s ease;
 }
 
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Título */
 .turnos-container h1 {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #1e3a8a;
 }
 
+/* Formulario */
 .form-turnos {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
+/* Inputs */
 .form-turnos input,
 .form-turnos select {
   padding: 12px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  transition: 0.2s;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  outline: none;
+  transition: 0.3s;
+  font-size: 14px;
 }
 
+/* Focus */
 .form-turnos input:focus,
 .form-turnos select:focus {
-  border-color: #2b7cff;
-  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59,130,246,0.3);
 }
 
+/* Botón */
 .form-turnos button {
-  padding: 14px;
-  font-size: 16px;
-  border: none;
-  background-color: #2b7cff;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.form-turnos button:hover {
-  background-color: #1a5fd1;
-}
-
-.turnos-list {
-  margin-top: 40px;
-}
-
-.turno-card {
-  border: 1px solid #eee;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.turno-card button {
   margin-top: 10px;
-  padding: 8px 12px;
+  padding: 12px;
   border: none;
-  background: crimson;
+  border-radius: 12px;
+  background: #3b82f6;
   color: white;
-  border-radius: 6px;
+  font-weight: bold;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Hover botón */
+.form-turnos button:hover {
+  background: #1d4ed8;
+  transform: scale(1.03);
+}
+
+/* Mensajes */
+.form-turnos p {
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Admin cards */
+.turno-card {
+  background: #f1f5f9;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }

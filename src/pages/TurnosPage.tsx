@@ -61,25 +61,25 @@ function TurnosPage() {
     }
 
     try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre, apellido, obra_social, fecha, hora }),
-      });
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nombre, apellido, obra_social, fecha, hora }),
+  });
 
-      if (!response.ok) throw new Error("Error en el servidor");
+  if (!response.ok) throw new Error("Error en el servidor");
 
-      const nuevoTurnoGuardado = await response.json();
+  // 🔥 IMPORTANTE: volver a traer todos los turnos desde el backend
+  const nuevosTurnos = await fetch(API_URL).then((res) => res.json());
 
-      // Actualizamos el estado local con lo que nos devolvió el backend
-      setTurnosReservados([...turnosReservados, nuevoTurnoGuardado]);
-      setError("");
-      setMensaje("✅ Turno reservado correctamente en Supabase");
-    } catch (err) {
-      console.error(err);
-      setError("Hubo un error al guardar el turno. Reintentá.");
-    }
-  };
+  setTurnosReservados(nuevosTurnos);
+
+  setError("");
+  setMensaje("✅ Turno reservado correctamente");
+} catch (err) {
+  console.error(err);
+  setError("Hubo un error al guardar el turno. Reintentá.");
+}
 
   // 3. ELIMINAR TURNO DEL BACKEND
   const eliminarTurno = async (id: number | undefined, index: number) => {
@@ -119,7 +119,7 @@ function TurnosPage() {
   return (
     <div className="turnos-page">
       <div className="turnos-container">
-        <h1>Reservar Turno</h1>
+        <h1>📅 Reservar Turno</h1>
 
         <Turnos
           onReservar={reservarTurno}
