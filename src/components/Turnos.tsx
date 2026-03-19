@@ -106,7 +106,8 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
       </button>
 
       {error && <p style={{color:"red"}}>{error}</p>}
-      {mensaje && <p style={{color:"green"}}>{mensaje}</p>}
+      {mensaje && <div className="success">{mensaje}</div>}
+      {error && <div className="error">{error}</div>}
 
     </div>
   );

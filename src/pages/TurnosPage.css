@@ -3,18 +3,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #dbeafe, #60a5fa);
+  background: linear-gradient(135deg, #e0f7ff, #f0f4ff);
   font-family: "Segoe UI", sans-serif;
 }
 
 /* Tarjeta */
 .turnos-container {
-  background: white;
+  max-width: 600px;
+  margin: auto;
   padding: 30px;
   border-radius: 20px;
-  width: 360px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-  animation: fadeIn 0.5s ease;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 /* Animación */
@@ -91,9 +92,60 @@
 
 /* Admin cards */
 .turno-card {
-  background: #f1f5f9;
+  background: white;
   padding: 15px;
-  border-radius: 12px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease;
+}
+.turno-card:hover {
+  transform: scale(1.02);
+}
+
+button {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: 0.2s;
+}
+
+input:focus, select:focus {
+  border-color: #0072ff;
+  box-shadow: 0 0 5px rgba(0,114,255,0.3);
+}
+
+.success {
+  background: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 10px;
   margin-top: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
 }
