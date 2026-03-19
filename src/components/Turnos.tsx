@@ -1,4 +1,6 @@
 import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface Props {
   onReservar: Function;
@@ -74,21 +76,22 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
       </select>
 
       <input
-        type="date"
-        value={fecha}
-        min={new Date().toISOString().split("T")[0]}
-        onChange={(e) => {
+  type="date"
+  value={fecha}
+  min={new Date().toISOString().split("T")[0]}
+  onChange={(e) => {
+    const fechaSeleccionada = e.target.value;
+    const dia = new Date(fechaSeleccionada).getDay();
 
-          const dia = new Date(e.target.value).getDay();
+    if (dia === 0 || dia === 6) {
+      setFecha(""); // limpia
+      alert("❌ No atendemos fines de semana");
+      return;
+    }
 
-          if (dia === 0 || dia === 4) {
-            alert("No atendemos fines de semana");
-            return;
-          }
-
-          setFecha(e.target.value);
-        }}
-      />
+    setFecha(fechaSeleccionada);
+  }}
+/>
 
       <select
         value={hora}
