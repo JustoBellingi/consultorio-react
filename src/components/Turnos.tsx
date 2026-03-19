@@ -80,17 +80,21 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
   value={fecha}
   min={new Date().toISOString().split("T")[0]}
   onChange={(e) => {
-    const fechaSeleccionada = e.target.value;
-    const dia = new Date(fechaSeleccionada).getDay();
+  const fechaSeleccionada = e.target.value;
 
-    if (dia === 0 || dia === 6) {
-      setFecha(""); // limpia
-      alert("❌ No atendemos fines de semana");
-      return;
-    }
+  // 🔥 FIX timezone
+  const fechaObj = new Date(fechaSeleccionada + "T00:00:00");
+  const dia = fechaObj.getDay();
 
-    setFecha(fechaSeleccionada);
-  }}
+  // 0 = domingo, 6 = sábado
+  if (dia === 0 || dia === 6) {
+    setFecha("");
+    alert("❌ No atendemos sábados ni domingos");
+    return;
+  }
+
+  setFecha(fechaSeleccionada);
+}}
 />
 
       <select
