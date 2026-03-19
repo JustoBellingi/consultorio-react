@@ -94,17 +94,31 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
 
       {/* 🔥 DATEPICKER PRO */}
       <DatePicker
-        selected={fecha}
-        onChange={(date: Date | null) => setFecha(date)}
-        filterDate={(date) => {
-          const dia = date.getDay();
-          return dia !== 0 && dia !== 6; // ❌ bloquea sábados y domingos
-        }}
-        minDate={new Date()}
-        placeholderText="📅 Seleccionar fecha"
-        dateFormat="yyyy-MM-dd"
-      />
+  selected={fecha}
+  onChange={(date: Date | null) => {
+    if (!date) return;
 
+    const dia = date.getDay();
+
+    // 🔥 BLOQUEO REAL
+    if (dia === 0 || dia === 6) {
+      alert("❌ No atendemos sábados ni domingos");
+      return;
+    }
+
+    setFecha(date);
+  }}
+  filterDate={(date) => {
+    const dia = date.getDay();
+    return dia !== 0 && dia !== 6; // gris + no clickeable
+  }}
+  excludeDates={[
+    new Date(2026, 0, 1) // placeholder (forzamos re-render interno)
+  ]}
+  minDate={new Date()}
+  placeholderText="📅 Seleccionar fecha"
+  dateFormat="yyyy-MM-dd"
+/>
       <select
         value={hora}
         onChange={(e) => setHora(e.target.value)}
