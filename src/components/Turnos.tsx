@@ -15,38 +15,54 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
   const [obraSocial, setObraSocial] = useState("");
   const [fecha, setFecha] = useState<Date | null>(null);
   const [hora, setHora] = useState("");
+  const [modal, setModal] = useState("");
 
-  // 🔥 Generar horarios
+  // 🔥 horarios
   const generarHorarios = () => {
     const horarios = [];
-
     for (let h = 8; h < 18; h++) {
       horarios.push(`${h.toString().padStart(2, "0")}:00`);
       horarios.push(`${h.toString().padStart(2, "0")}:30`);
     }
-
     return horarios;
   };
 
   const horarios = generarHorarios();
 
-  // 🔥 Formatear fecha para comparar con backend
   const fechaFormateada = fecha
     ? fecha.toISOString().split("T")[0]
     : "";
 
-  // 🔥 Filtrar horarios ocupados
-  const horariosDisponibles = horarios.filter(
-    (h) =>
-      !turnosReservados.find(
-        (t) => t.fecha === fechaFormateada && t.hora === h
-      )
-  );
+  const ahora = new Date();
 
-  // 🔥 Reservar turno
+  // 🔥 filtrar horarios
+  const horariosDisponibles = horarios.filter((h) => {
+    const ocupado = turnosReservados.find(
+      (t) => t.fecha === fechaFormateada && t.hora === h
+    );
+
+    if (ocupado) return false;
+
+    if (fecha) {
+      const hoy = new Date().toISOString().split("T")[0];
+
+      if (fechaFormateada === hoy) {
+        const [horaNum, min] = h.split(":").map(Number);
+
+        const fechaHora = new Date();
+        fechaHora.setHours(horaNum, min, 0, 0);
+
+        if (fechaHora < ahora) return false;
+      }
+    }
+
+    return true;
+  });
+
+  // 🔥 reservar
   const reservar = () => {
-    if (!fecha) {
-      alert("Seleccioná una fecha");
+    if (!nombre || !apellido || !obraSocial || !fecha || !hora) {
+      setModal("⚠️ Completá todos los campos");
       return;
     }
 
@@ -70,14 +86,12 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
       <input
         placeholder="👤 Nombre"
         value={nombre}
-        required
         onChange={(e) => setNombre(e.target.value)}
       />
 
       <input
         placeholder="👤 Apellido"
         value={apellido}
-        required
         onChange={(e) => setApellido(e.target.value)}
       />
 
@@ -92,39 +106,32 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
         <option>Particular</option>
       </select>
 
-      {/* 🔥 DATEPICKER PRO */}
+      {/* 🔥 CALENDARIO PRO */}
       <DatePicker
-  selected={fecha}
-  onChange={(date: Date | null) => {
-    if (!date) return;
+        selected={fecha}
+        onChange={(date: Date | null) => {
+          if (!date) return;
 
-    const dia = date.getDay();
+          const dia = date.getDay();
 
-    // 🔥 BLOQUEO REAL
-    if (dia === 0 || dia === 6) {
-      alert("❌ No atendemos sábados ni domingos");
-      return;
-    }
+          if (dia === 0 || dia === 6) {
+            setModal("❌ No atendemos sábados ni domingos");
+            return;
+          }
 
-    setFecha(date);
-  }}
-  filterDate={(date) => {
-    const dia = date.getDay();
-    return dia !== 0 && dia !== 6; // gris + no clickeable
-  }}
-  excludeDates={[
-    new Date(2026, 0, 1) // placeholder (forzamos re-render interno)
-  ]}
-  minDate={new Date()}
-  placeholderText="📅 Seleccionar fecha"
-  dateFormat="yyyy-MM-dd"
-/>
-      <select
-        value={hora}
-        onChange={(e) => setHora(e.target.value)}
-      >
+          setFecha(date);
+        }}
+        filterDate={(date) => {
+          const dia = date.getDay();
+          return dia !== 0 && dia !== 6;
+        }}
+        minDate={new Date()}
+        placeholderText="📅 Seleccionar fecha"
+        dateFormat="yyyy-MM-dd"
+      />
+
+      <select value={hora} onChange={(e) => setHora(e.target.value)}>
         <option value="">⏰ Horario</option>
-
         {horariosDisponibles.map((h) => (
           <option key={h}>{h}</option>
         ))}
@@ -137,6 +144,15 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
       {error && <div className="error">{error}</div>}
       {mensaje && <div className="success">{mensaje}</div>}
 
+      {/* 🔥 MODAL */}
+      {modal && (
+        <div className="modal">
+          <div className="modal-content">
+            <p>{modal}</p>
+            <button onClick={() => setModal("")}>Cerrar</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

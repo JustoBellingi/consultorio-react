@@ -19,40 +19,15 @@ function TurnosPage() {
 
   const API_URL = "https://consultorio-react-1.onrender.com/turnos";
 
-  // 🔥 WHATSAPP (FUERA DE TODO)
-  const enviarWhatsApp = (
-    nombre: string,
-    apellido: string,
-    fecha: string,
-    hora: string
-  ) => {
-    const numero = "5492215117589";
-
-    const mensaje = `Hola! 👋 Soy ${nombre} ${apellido}.
-Acabo de reservar un turno:
-
-📅 Fecha: ${fecha}
-⏰ Hora: ${hora}
-
-Quedo a la espera de confirmación. ¡Gracias!`;
-
-    const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
-
-    window.open(url, "_blank");
-  };
-
-  // 🔥 CARGAR TURNOS
+  // 🔥 cargar turnos
   useEffect(() => {
     fetch(API_URL)
       .then((res) => res.json())
       .then((data) => setTurnosReservados(data))
-      .catch((err) => {
-        console.error(err);
-        setError("No se pudieron cargar los turnos.");
-      });
+      .catch(() => setError("Error cargando turnos"));
   }, []);
 
-  // 🔥 RESERVAR
+  // 🔥 reservar
   const reservarTurno = async (
     nombre: string,
     apellido: string,
@@ -60,29 +35,12 @@ Quedo a la espera de confirmación. ¡Gracias!`;
     fecha: string,
     hora: string
   ) => {
-    if (!nombre || !apellido || !obra_social || !fecha || !hora) {
-      setError("Completa todos los campos.");
-      return;
-    }
-
-    const hoy = new Date().toISOString().split("T")[0];
-    if (fecha < hoy) {
-      setError("No podés reservar días anteriores.");
-      return;
-    }
-
-    const ocupado = turnosReservados.find(
-      (t) => t.fecha === fecha && t.hora === hora
-    );
-    if (ocupado) {
-      setError("Ese horario ya está reservado.");
-      return;
-    }
-
     try {
       const response = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           nombre,
           apellido,
@@ -92,27 +50,35 @@ Quedo a la espera de confirmación. ¡Gracias!`;
         }),
       });
 
-      if (!response.ok) throw new Error("Error en el servidor");
+      if (!response.ok) throw new Error();
 
-      const nuevosTurnos = await fetch(API_URL).then((res) => res.json());
+      const nuevos = await fetch(API_URL).then((res) => res.json());
+      setTurnosReservados(nuevos);
 
-      setTurnosReservados(nuevosTurnos);
-      setError("");
       setMensaje("✅ Turno reservado correctamente");
+      setError("");
 
-      // 💬 WHATSAPP
-      enviarWhatsApp(nombre, apellido, fecha, hora);
+      // 🔥 WHATSAPP
+      const mensajeWsp = `Hola! 👋 Soy ${nombre} ${apellido}.
+Quiero confirmar mi turno:
 
-    } catch (err) {
-      console.error(err);
-      setError("Hubo un error al guardar el turno.");
+📅 Fecha: ${fecha}
+⏰ Hora: ${hora}`;
+
+      window.open(
+        `https://wa.me/5492215117589?text=${encodeURIComponent(mensajeWsp)}`,
+        "_blank"
+      );
+
+    } catch {
+      setError("Error al reservar turno");
     }
   };
 
-  // 🔥 ELIMINAR
+  // 🔥 eliminar
   const eliminarTurno = async (id: number | undefined, index: number) => {
     if (!id) return;
-    if (!window.confirm("¿Eliminar este turno definitivamente?")) return;
+    if (!window.confirm("¿Eliminar turno?")) return;
 
     try {
       const response = await fetch(`${API_URL}/${id}`, {
@@ -125,14 +91,14 @@ Quedo a la espera de confirmación. ¡Gracias!`;
         setTurnosReservados(nuevos);
       }
     } catch {
-      setError("No se pudo eliminar el turno.");
+      setError("Error al eliminar");
     }
   };
 
   const activarAdmin = () => {
     const pass = prompt("Contraseña admin");
     if (pass === "Justo0406") setAdmin(!admin);
-    else alert("Contraseña incorrecta");
+    else alert("Incorrecta");
   };
 
   const turnosOrdenados = [...turnosReservados].sort(
@@ -153,24 +119,31 @@ Quedo a la espera de confirmación. ¡Gracias!`;
           turnosReservados={turnosReservados}
         />
 
-        <button style={{ marginTop: "30px" }} onClick={activarAdmin}>
+        <button onClick={activarAdmin}>
           {admin ? "Ocultar turnos" : "Modo Admin"}
         </button>
 
         {admin && (
           <div className="turnos-list">
-            <h2>Turnos Reservados (Panel Admin)</h2>
+            <h2>Turnos Reservados</h2>
 
             {turnosOrdenados.length === 0 ? (
-              <p>No hay turnos reservados.</p>
+              <p>No hay turnos</p>
             ) : (
               turnosOrdenados.map((t, i) => (
-                <div key={t.id || i} className="turno-card">
-                  <p><b>Nombre:</b> {t.nombre}</p>
-                  <p><b>Apellido:</b> {t.apellido}</p>
-                  <p><b>Obra Social:</b> {t.obra_social}</p>
-                  <p><b>Fecha:</b> {t.fecha}</p>
-                  <p><b>Hora:</b> {t.hora}</p>
+                <div
+                  key={t.id || i}
+                  className="turno-card"
+                  style={{
+                    borderLeft:
+                      t.fecha === new Date().toISOString().split("T")[0]
+                        ? "5px solid green"
+                        : "none",
+                  }}
+                >
+                  <p>{t.nombre} {t.apellido}</p>
+                  <p>{t.obra_social}</p>
+                  <p>{t.fecha} - {t.hora}</p>
 
                   <button onClick={() => eliminarTurno(t.id, i)}>
                     Eliminar
