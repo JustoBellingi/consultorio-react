@@ -16,8 +16,6 @@ function TurnosPage() {
   const [error, setError] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [admin, setAdmin] = useState(false);
-
-  // URL DE TU BACKEND EN RENDER (Cambiala por la tuya exacta)
   const API_URL = "https://consultorio-react-1.onrender.com/turnos";
 
   // 1. CARGAR TURNOS DESDE EL BACKEND
@@ -32,6 +30,7 @@ function TurnosPage() {
         setError("No se pudieron cargar los turnos del servidor.");
       });
   }, []);
+  
 
   // 2. RESERVAR TURNO (ENVIAR AL BACKEND)
   const reservarTurno = async (
@@ -115,6 +114,7 @@ function TurnosPage() {
       new Date(a.fecha + " " + a.hora).getTime() -
       new Date(b.fecha + " " + b.hora).getTime()
   );
+  
 
   return (
     <div className="turnos-page">
@@ -156,6 +156,7 @@ function TurnosPage() {
       </div>
     </div>
   );
+}
 }
 
 export default TurnosPage;
