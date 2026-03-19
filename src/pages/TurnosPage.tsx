@@ -79,6 +79,7 @@ function TurnosPage() {
   console.error(err);
   setError("Hubo un error al guardar el turno. Reintentá.");
 }
+  };
 
   // 3. ELIMINAR TURNO DEL BACKEND
   const eliminarTurno = async (id: number | undefined, index: number) => {
@@ -157,6 +158,6 @@ function TurnosPage() {
     </div>
   );
 }
-}
 
+  
 export default TurnosPage;
