@@ -47,3 +47,8 @@
   border-radius: 10px;
   margin-bottom: 15px;
 }
+
+.react-datepicker {
+  border-radius: 10px;
+  font-family: sans-serif;
+}

@@ -9,17 +9,14 @@ interface Props {
   turnosReservados: any[];
 }
 
-
 function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
-
-  
-
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [obraSocial, setObraSocial] = useState("");
-  const [fecha, setFecha] = useState("");
+  const [fecha, setFecha] = useState<Date | null>(null);
   const [hora, setHora] = useState("");
 
+  // 🔥 Generar horarios
   const generarHorarios = () => {
     const horarios = [];
 
@@ -33,37 +30,57 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
 
   const horarios = generarHorarios();
 
+  // 🔥 Formatear fecha para comparar con backend
+  const fechaFormateada = fecha
+    ? fecha.toISOString().split("T")[0]
+    : "";
+
+  // 🔥 Filtrar horarios ocupados
   const horariosDisponibles = horarios.filter(
     (h) =>
       !turnosReservados.find(
-        (t) => t.fecha === fecha && t.hora === h
+        (t) => t.fecha === fechaFormateada && t.hora === h
       )
   );
 
+  // 🔥 Reservar turno
   const reservar = () => {
-    onReservar(nombre, apellido, obraSocial, fecha, hora);
+    if (!fecha) {
+      alert("Seleccioná una fecha");
+      return;
+    }
+
+    onReservar(
+      nombre,
+      apellido,
+      obraSocial,
+      fechaFormateada,
+      hora
+    );
 
     setNombre("");
     setApellido("");
     setHora("");
+    setFecha(null);
   };
 
   return (
     <div className="form-turnos">
 
       <input
-  placeholder="👤 Nombre"
-  value={nombre}
-  required
-  onChange={(e) => setNombre(e.target.value)}
-/>
+        placeholder="👤 Nombre"
+        value={nombre}
+        required
+        onChange={(e) => setNombre(e.target.value)}
+      />
 
-<input
-  placeholder="👤 Apellido"
-  value={apellido}
-  required
-  onChange={(e) => setApellido(e.target.value)}
-/>
+      <input
+        placeholder="👤 Apellido"
+        value={apellido}
+        required
+        onChange={(e) => setApellido(e.target.value)}
+      />
+
       <select
         value={obraSocial}
         onChange={(e) => setObraSocial(e.target.value)}
@@ -75,27 +92,18 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
         <option>Particular</option>
       </select>
 
-      <input
-  type="date"
-  value={fecha}
-  min={new Date().toISOString().split("T")[0]}
-  onChange={(e) => {
-  const fechaSeleccionada = e.target.value;
-
-  // 🔥 FIX timezone
-  const fechaObj = new Date(fechaSeleccionada + "T00:00:00");
-  const dia = fechaObj.getDay();
-
-  // 0 = domingo, 6 = sábado
-  if (dia === 0 || dia === 6) {
-    setFecha("");
-    alert("❌ No atendemos sábados ni domingos");
-    return;
-  }
-
-  setFecha(fechaSeleccionada);
-}}
-/>
+      {/* 🔥 DATEPICKER PRO */}
+      <DatePicker
+        selected={fecha}
+        onChange={(date: Date | null) => setFecha(date)}
+        filterDate={(date) => {
+          const dia = date.getDay();
+          return dia !== 0 && dia !== 6; // ❌ bloquea sábados y domingos
+        }}
+        minDate={new Date()}
+        placeholderText="📅 Seleccionar fecha"
+        dateFormat="yyyy-MM-dd"
+      />
 
       <select
         value={hora}
@@ -109,17 +117,14 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
       </select>
 
       <button onClick={reservar}>
-       📅 Reservar turno
+        📅 Reservar turno
       </button>
 
-      {error && <p style={{color:"red"}}>{error}</p>}
-      {mensaje && <div className="success">{mensaje}</div>}
       {error && <div className="error">{error}</div>}
+      {mensaje && <div className="success">{mensaje}</div>}
 
     </div>
   );
 }
-
-
 
 export default Turnos;
