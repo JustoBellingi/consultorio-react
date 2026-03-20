@@ -67,6 +67,7 @@ function App() {
         <Route path="/servicios" element={<Servicios />} />
         <Route path="/sobre" element={<Sobre />} />
         <Route path="/contacto" element={<Contacto />} />
+        <Route path ="Navbar" element={<Navbar />} />
       </Routes>
 
       <a
