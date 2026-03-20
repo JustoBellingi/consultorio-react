@@ -16,8 +16,8 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
   const [fecha, setFecha] = useState<Date | null>(null);
   const [hora, setHora] = useState("");
   const [modal, setModal] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // 🔥 horarios
   const generarHorarios = () => {
     const horarios = [];
     for (let h = 8; h < 18; h++) {
@@ -35,7 +35,6 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
 
   const ahora = new Date();
 
-  // 🔥 filtrar horarios
   const horariosDisponibles = horarios.filter((h) => {
     const ocupado = turnosReservados.find(
       (t) => t.fecha === fechaFormateada && t.hora === h
@@ -59,20 +58,25 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
     return true;
   });
 
-  // 🔥 reservar
-  const reservar = () => {
+  const reservar = async () => {
     if (!nombre || !apellido || !obraSocial || !fecha || !hora) {
       setModal("⚠️ Completá todos los campos");
       return;
     }
 
-    onReservar(
+    setLoading(true);
+
+    await onReservar(
       nombre,
       apellido,
       obraSocial,
       fechaFormateada,
       hora
     );
+
+    setLoading(false);
+
+    setModal("✅ Turno reservado con éxito");
 
     setNombre("");
     setApellido("");
@@ -106,7 +110,6 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
         <option>Particular</option>
       </select>
 
-      {/* 🔥 CALENDARIO PRO */}
       <DatePicker
         selected={fecha}
         onChange={(date: Date | null) => {
@@ -132,19 +135,25 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
 
       <select value={hora} onChange={(e) => setHora(e.target.value)}>
         <option value="">⏰ Horario</option>
+
         {horariosDisponibles.map((h) => (
           <option key={h}>{h}</option>
         ))}
       </select>
 
-      <button onClick={reservar}>
-        📅 Reservar turno
+      <button onClick={reservar} disabled={loading}>
+        {loading ? "Reservando..." : "📅 Reservar turno"}
       </button>
 
       {error && <div className="error">{error}</div>}
       {mensaje && <div className="success">{mensaje}</div>}
 
-      {/* 🔥 MODAL */}
+      {fecha && horariosDisponibles.length === 0 && (
+        <p style={{ color: "red" }}>
+          ❌ No hay horarios disponibles para este día
+        </p>
+      )}
+
       {modal && (
         <div className="modal">
           <div className="modal-content">

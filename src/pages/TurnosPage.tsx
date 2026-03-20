@@ -15,7 +15,9 @@ function TurnosPage() {
   const [turnosReservados, setTurnosReservados] = useState<Turno[]>([]);
   const [error, setError] = useState("");
   const [mensaje, setMensaje] = useState("");
-  const [admin, setAdmin] = useState(false);
+  const [admin, setAdmin] = useState(
+  localStorage.getItem("admin") === "true"
+);
 
   const API_URL = "https://consultorio-react-1.onrender.com/turnos";
 
@@ -96,10 +98,22 @@ Quiero confirmar mi turno:
   };
 
   const activarAdmin = () => {
-    const pass = prompt("Contraseña admin");
-    if (pass === "Justo0406") setAdmin(!admin);
-    else alert("Incorrecta");
-  };
+  const pass = prompt("Contraseña admin");
+
+  if (pass === "Justo0406") {
+    localStorage.setItem("admin", "true");
+    setAdmin(true);
+  } else {
+    alert("Contraseña incorrecta");
+  }
+};
+const desactivarAdmin = () => {
+  localStorage.removeItem("admin");
+  setAdmin(false);
+};
+<button onClick={admin ? desactivarAdmin : activarAdmin}>
+  {admin ? "Cerrar admin" : "Modo Admin"}
+</button>
 
   const turnosOrdenados = [...turnosReservados].sort(
     (a, b) =>

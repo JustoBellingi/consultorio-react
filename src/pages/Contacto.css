@@ -65,3 +65,36 @@
   border-radius: 15px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
+
+.btn-contacto {
+  padding: 12px 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.whatsapp {
+  background: #25d366;
+}
+
+.email {
+  background: #3b82f6;
+}
+
+.btn-contacto:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.contacto-botones {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.contacto-extra {
+  margin-top: 15px;
+  color: #64748b;
+}

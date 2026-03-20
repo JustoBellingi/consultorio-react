@@ -10,6 +10,7 @@ import Contacto from "./pages/Contacto";
 import TurnosPage from "./pages/TurnosPage";
 import type { Turno } from "./types/Turno";
 import Footer from "./components/Footer";
+import Navbar from "./pages/Navbar";
 
 function App() {
   const [turnosReservados, setTurnosReservados] = useState<Turno[]>([]);

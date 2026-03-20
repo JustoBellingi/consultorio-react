@@ -36,8 +36,9 @@
 }
 
 .nav-links a:hover {
-  background-color: #145da0;
-  color: #82ccdd;
+  background-color: white;
+  color: white;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
 }
 
 /* FOOTER */

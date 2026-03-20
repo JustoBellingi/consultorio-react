@@ -1,43 +1,63 @@
-import { Link } from "react-router-dom";
+
+import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
 import "./Footer.css";
+
 function Footer() {
   return (
     <footer className="footer">
-
       <div className="footer-container">
 
+        {/* Columna 1 */}
         <div className="footer-col">
           <h3>Odontología</h3>
           <p>
-            Atención profesional con compromiso y confianza para
-            cada paciente.
+            Brindamos atención profesional con tecnología moderna y un enfoque
+            centrado en el paciente.
           </p>
         </div>
 
-         <div className="footer-col">
+        {/* Columna 2 */}
+        <div className="footer-col">
           <h3>Enlaces</h3>
           <ul>
-            <li><Link to="/">Inicio</Link></li>
-            <li><Link to="/sobre">Sobre Nosotros</Link></li>
-            <li><Link to="/turnos">Turnos</Link></li>
-            <li><Link to="/servicios">Servicios</Link></li>
-            <li><Link to="/contacto">Contacto</Link></li>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/turnos">Turnos</a></li>
+            <li><a href="/servicios">Servicios</a></li>
+            <li><a href="/contacto">Contacto</a></li>
           </ul>
         </div>
 
+        {/* Columna 3 */}
         <div className="footer-col">
           <h3>Contacto</h3>
-          <p>📍 Dirección del consultorio</p>
-          <p>📞 +54 9 11 1234-5678</p>
-          <p>✉ contacto@consultorio.com</p>
+          <p>📍 La Plata, Buenos Aires</p>
+          <p>📞 +54 9 221 511 7589</p>
+          <p>✉️ anitaliareyherrero@gmail.com</p>
         </div>
+
+         <div className="contact-icons">
+
+            {/* WHATSAPP */}
+            <a
+              href="https://wa.me/5492215117589"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FaWhatsapp /> WhatsApp
+            </a>
+
+            {/* EMAIL */}
+            <a href="mailto:anitaliareyherrero@gmail.com">
+              <FaEnvelope /> Email
+            </a>
+
+          </div>
 
       </div>
 
       <div className="footer-bottom">
-        © 2025 Odontología - Todos los derechos reservados
+        <p>© 2026 Consultorio Odontológico - Todos los derechos reservados</p>
       </div>
-
     </footer>
   );
 }

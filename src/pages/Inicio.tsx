@@ -1,51 +1,55 @@
+import { Link } from "react-router-dom";
 import foto1 from "../assets/foto1.jpg";
 import foto2 from "../assets/foto2.jpg";
 import "./Inicio.css";
-export default function Inicio() {
+
+function Inicio() {
   return (
-    <div className="inicio-container">
+    <section className="hero">
+      <div className="hero-content">
 
-      {/* HERO */}
-      <section className="hero">
-        <div className="hero-texto">
-          <h1>CTD</h1>
-          <p>
-            Cuidamos tu sonrisa con profesionalismo y calidez.
-            Atención personalizada en un espacio moderno y confortable.
-          </p>
-          <a href="/turnos" className="btn-principal">
-            Reservar turno
-          </a>
+        <h1>Tu sonrisa en manos profesionales</h1>
+
+        <p>
+          Atención odontológica de calidad en La Plata. Tecnología moderna,
+          profesionales capacitados y atención personalizada.
+        </p>
+
+        <div className="hero-buttons">
+          <Link to="/turnos" className="btn-primary">
+            📅 Reservar turno
+          </Link>
+
+          <Link to="/servicios" className="btn-secondary">
+            Ver servicios
+          </Link>
         </div>
 
+        {/* 🔥 IMÁGENES */}
         <div className="hero-imagenes">
-          <img src={foto1} alt="Consultorio CTD 1" />
-          <img src={foto2} alt="Consultorio CTD 2" />
+          <img src={foto1} alt="Consultorio 1" />
+          <img src={foto2} alt="Consultorio 2" />
         </div>
-      </section>
 
-      {/* SERVICIOS DESTACADOS */}
-      <section className="servicios">
-        <h2>Nuestros Servicios</h2>
-
-        <div className="cards">
-          <div className="card">
-            <h3>Limpieza y Control</h3>
-            <p>Prevención y cuidado integral para mantener tu salud bucal.</p>
+        {/* 🔥 STATS */}
+        <div className="hero-stats">
+          <div>
+            <h3>+500</h3>
+            <p>Pacientes</p>
           </div>
-
-          <div className="card">
-            <h3>Ortodoncia</h3>
-            <p>Tratamientos modernos para una sonrisa alineada y saludable.</p>
+          <div>
+            <h3>+5 años</h3>
+            <p>Experiencia</p>
           </div>
-
-          <div className="card">
-            <h3>Blanqueamiento</h3>
-            <p>Mejorá la estética de tu sonrisa con procedimientos seguros.</p>
+          <div>
+            <h3>100%</h3>
+            <p>Satisfacción</p>
           </div>
         </div>
-      </section>
 
-    </div>
+      </div>
+    </section>
   );
 }
+
+export default Inicio;

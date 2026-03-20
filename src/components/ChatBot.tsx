@@ -11,7 +11,7 @@ function ChatBot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "Buenos días. Soy la asistente virtual de la Dra. Martínez. ¿En qué puedo ayudarlo?",
+      text: "Buenos días. Soy la asistente virtual de la Dra. Rey. ¿En qué puedo ayudarlo?",
       sender: "bot",
     },
   ]);

@@ -80,13 +80,13 @@
 }
 
 .message.bot {
-  background-color: #f1f5f9;
+  background-color: white;
   align-self: flex-start;
 }
 
 .message.user {
   background-color: #1e3a8a;
-  color: white;
+  color: black;
   align-self: flex-end;
 }
 
@@ -101,14 +101,14 @@
   padding: 7px;
   border-radius: 8px;
   border: 1px solid #1e3a8a;
-  background: white;
+  background: black;
   cursor: pointer;
   font-size: 13px;
   transition: background 0.2s ease;
 }
 
 .chat-options button:hover {
-  background-color: #eef2ff;
+  background-color: blue;
 }
 
 @keyframes fadeIn {
