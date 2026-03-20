@@ -1,22 +1,27 @@
 import { Link } from "react-router-dom";
-import foto1 from "../assets/foto1.jpg";
 import "./Inicio.css";
 
 function Inicio() {
   return (
     <section className="hero">
 
-      <div className="hero-container">
+      {/* BACKGROUND */}
+      <div className="hero-bg"></div>
+
+      {/* CONTENIDO */}
+      <div className="hero-content">
 
         {/* TEXTO */}
         <div className="hero-text">
+          <span className="badge">✨ Atención odontológica premium</span>
+
           <h1>
-            Tu sonrisa en manos profesionales
+            Sonreí con confianza <br /> todos los días
           </h1>
 
           <p>
-            Atención odontológica de calidad en La Plata. Tecnología moderna,
-            profesionales capacitados y un enfoque totalmente personalizado.
+            Tecnología moderna, profesionales capacitados y atención
+            personalizada en La Plata.
           </p>
 
           <div className="hero-buttons">
@@ -29,7 +34,6 @@ function Inicio() {
             </Link>
           </div>
 
-          {/* STATS */}
           <div className="hero-stats">
             <div>
               <h3>+500</h3>
@@ -46,12 +50,22 @@ function Inicio() {
           </div>
         </div>
 
-        {/* IMÁGENES */}
-        <div className="hero-images">
-          <img src={foto1} alt="Consultorio 1" className="img-main" />
+        {/* CARD */}
+        <div className="hero-card">
+          <h3>✔ Turnos rápidos</h3>
+          <p>Reservá en menos de 1 minuto</p>
+
+          <h3>🦷 Atención profesional</h3>
+          <p>Especialistas certificados</p>
+
+          <h3>💬 Soporte inmediato</h3>
+          <p>Respondemos en el día</p>
         </div>
 
       </div>
+
+      {/* SCROLL */}
+      <div className="scroll-indicator">↓</div>
 
     </section>
   );
