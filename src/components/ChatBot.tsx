@@ -11,63 +11,66 @@ function ChatBot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "Buenos días. Soy la asistente virtual de la Dra. Rey. ¿En qué puedo ayudarlo?",
+      text: "Hola 👋 Soy la asistente. ¿Qué necesitás?",
       sender: "bot",
     },
   ]);
 
-  const handleOption = (option: string) => {
-    const userMessage: Message = { text: option, sender: "user" };
-    let botResponse: Message = { text: "", sender: "bot" };
+  const sendMessage = (text: string) => {
+    const userMsg: Message = { text, sender: "user" };
 
-    if (option === "Solicitar turno") {
-      botResponse.text =
-        "Por favor, diríjase a la sección de turnos para completar el formulario.";
-    } else if (option === "Ver horarios") {
-      botResponse.text =
-        "Los horarios disponibles se actualizan en tiempo real en la sección de turnos.";
-    } else if (option === "Contacto") {
-      botResponse.text =
-        "Puede comunicarse al 221 511 -7589.";
+    let respuesta = "";
+
+    if (text.includes("turno")) {
+      respuesta = "Podés reservar directamente en la sección de turnos 📅";
+    } else if (text.includes("horario")) {
+      respuesta = "Atendemos de lunes a viernes de 9 a 18 hs 🕒";
+    } else if (text.includes("precio")) {
+      respuesta = "Los precios varían según el tratamiento. Te recomendamos consultar por WhatsApp 💬";
+    } else {
+      respuesta = "Podés consultarnos por WhatsApp para una respuesta más rápida 😊";
     }
 
-    setMessages([...messages, userMessage, botResponse]);
+    const botMsg: Message = { text: respuesta, sender: "bot" };
+
+    setMessages((prev) => [...prev, userMsg, botMsg]);
   };
 
   return (
     <>
-      {/* BOTÓN CIRCULAR CON FOTO */}
+      {/* BOTÓN */}
       <button className="chat-button" onClick={() => setOpen(!open)}>
-        <img src={doctora} alt="Asistente Dra. Martínez" />
-        <span className="online-indicator"></span>
+        <img src={doctora} alt="Asistente" />
+        <span className="online"></span>
       </button>
 
       {open && (
         <div className="chat-window">
           <div className="chat-header">
-            Dra. Martínez
-            <div className="chat-subtitle">Asistente Virtual</div>
+            Asistente Virtual
           </div>
 
           <div className="chat-messages">
-            {messages.map((msg, index) => (
-              <div key={index} className={`message ${msg.sender}`}>
+            {messages.map((msg, i) => (
+              <div key={i} className={`msg ${msg.sender}`}>
                 {msg.text}
               </div>
             ))}
           </div>
 
-          <div className="chat-options">
-            <button onClick={() => handleOption("Solicitar turno")}>
-              Solicitar turno
-            </button>
-            <button onClick={() => handleOption("Ver horarios")}>
-              Ver horarios
-            </button>
-            <button onClick={() => handleOption("Contacto")}>
-              Contacto
-            </button>
+          <div className="chat-actions">
+            <button onClick={() => sendMessage("turno")}>Turno</button>
+            <button onClick={() => sendMessage("horario")}>Horarios</button>
+            <button onClick={() => sendMessage("precio")}>Precios</button>
           </div>
+
+          <a
+            href="https://wa.me/5492215117589"
+            target="_blank"
+            className="chat-wsp"
+          >
+            Ir a WhatsApp
+          </a>
         </div>
       )}
     </>

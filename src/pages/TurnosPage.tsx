@@ -20,7 +20,7 @@ function TurnosPage() {
 
   const API_URL = "https://consultorio-react-1.onrender.com/turnos";
 
-  // 🔐 ADMIN SOLO POR URL
+  // 🔐 ADMIN SOLO SI ENTRÁS CON ?admin=true
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("admin") === "true") {
@@ -61,6 +61,7 @@ function TurnosPage() {
 
       if (!response.ok) throw new Error();
 
+      // 🔥 refrescar desde backend
       const nuevos = await fetch(API_URL).then((res) => res.json());
       setTurnosReservados(nuevos);
 
@@ -72,24 +73,17 @@ function TurnosPage() {
         .send(
           "TU_SERVICE_ID",
           "TU_TEMPLATE_ID",
-          {
-            nombre,
-            apellido,
-            fecha,
-            hora,
-            obra_social,
-          },
+          { nombre, apellido, fecha, hora, obra_social },
           "TU_PUBLIC_KEY"
         )
-        .then(() => console.log("Mail enviado"))
         .catch(() => console.log("Error mail"));
 
       // 💬 WHATSAPP
-      const mensajeWsp = `Hola! 👋 Soy ${nombre} ${apellido}.
-Quiero confirmar mi turno:
+      const mensajeWsp = `Hola! Soy ${nombre} ${apellido}.
+Turno confirmado:
 
-📅 Fecha: ${fecha}
-⏰ Hora: ${hora}`;
+📅 ${fecha}
+⏰ ${hora}`;
 
       window.open(
         `https://wa.me/5492215117589?text=${encodeURIComponent(mensajeWsp)}`,
@@ -101,8 +95,8 @@ Quiero confirmar mi turno:
     }
   };
 
-  // 🗑️ ELIMINAR
-  const eliminarTurno = async (id: number | undefined, index: number) => {
+  // 🗑️ ELIMINAR (FIX REAL)
+  const eliminarTurno = async (id: number | undefined) => {
     if (!id) return;
     if (!window.confirm("¿Eliminar turno?")) return;
 
@@ -111,13 +105,14 @@ Quiero confirmar mi turno:
         method: "DELETE",
       });
 
-      if (response.ok) {
-        const nuevos = [...turnosReservados];
-        nuevos.splice(index, 1);
-        setTurnosReservados(nuevos);
-      }
+      if (!response.ok) throw new Error();
+
+      // 🔥 REFETCH (clave)
+      const nuevos = await fetch(API_URL).then((res) => res.json());
+      setTurnosReservados(nuevos);
+
     } catch {
-      setError("Error al eliminar");
+      setError("Error al eliminar turno");
     }
   };
 
@@ -148,45 +143,29 @@ Quiero confirmar mi turno:
             <li>✔ Atención personalizada</li>
             <li>✔ Tecnología moderna</li>
             <li>✔ Profesionales certificados</li>
-            <li>✔ Turnos rápidos y simples</li>
+            <li>✔ Turnos rápidos</li>
           </ul>
-
-          <div className="info-card">
-            📍 City Bell, La Plata
-          </div>
-
-          <div className="info-card">
-            🕒 Lunes a Viernes 9:00 - 18:00
-          </div>
         </div>
 
       </div>
 
-      {/* 🔐 ADMIN SOLO VOS */}
+      {/* 🔐 ADMIN INVISIBLE PARA USUARIOS */}
       {admin && (
         <div className="admin-panel">
-          <h2>Turnos Reservados</h2>
+          <h2>Panel Admin</h2>
 
-          {turnosOrdenados.map((t, i) => (
-            <div key={t.id || i} className="turno-card">
+          {turnosOrdenados.map((t) => (
+            <div key={t.id} className="turno-card">
               <p>{t.nombre} {t.apellido}</p>
               <p>{t.fecha} - {t.hora}</p>
-              <button onClick={() => eliminarTurno(t.id, i)}>
+
+              <button onClick={() => eliminarTurno(t.id)}>
                 Eliminar
               </button>
             </div>
           ))}
         </div>
       )}
-
-      {/* 💬 BOTÓN FLOTANTE */}
-      <a
-        href="https://wa.me/5492215117589"
-        target="_blank"
-        className="chat-button"
-      >
-        💬
-      </a>
     </div>
   );
 }
