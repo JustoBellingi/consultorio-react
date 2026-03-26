@@ -12,6 +12,7 @@
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
+    "emailjs-com": "^3.2.0",
     "express": "^5.2.1",
     "mysql2": "^3.18.2",
     "pg": "^8.20.0",
