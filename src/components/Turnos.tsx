@@ -15,19 +15,13 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
   const [obraSocial, setObraSocial] = useState("");
   const [fecha, setFecha] = useState<Date | null>(null);
   const [hora, setHora] = useState("");
-  const [modal, setModal] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const generarHorarios = () => {
-    const horarios = [];
-    for (let h = 8; h < 18; h++) {
-      horarios.push(`${h.toString().padStart(2, "0")}:00`);
-      horarios.push(`${h.toString().padStart(2, "0")}:30`);
-    }
-    return horarios;
-  };
-
-  const horarios = generarHorarios();
+  const horarios = Array.from({ length: 20 }, (_, i) => {
+    const h = Math.floor(i / 2) + 8;
+    const m = i % 2 === 0 ? "00" : "30";
+    return `${h.toString().padStart(2, "0")}:${m}`;
+  });
 
   const fechaFormateada = fecha
     ? fecha.toISOString().split("T")[0]
@@ -47,7 +41,6 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
 
       if (fechaFormateada === hoy) {
         const [horaNum, min] = h.split(":").map(Number);
-
         const fechaHora = new Date();
         fechaHora.setHours(horaNum, min, 0, 0);
 
@@ -59,24 +52,14 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
   });
 
   const reservar = async () => {
-    if (!nombre || !apellido || !obraSocial || !fecha || !hora) {
-      setModal("⚠️ Completá todos los campos");
-      return;
-    }
+    if (!nombre || !apellido || !obraSocial || !fecha || !hora) return;
 
+    if (loading) return;
     setLoading(true);
 
-    await onReservar(
-      nombre,
-      apellido,
-      obraSocial,
-      fechaFormateada,
-      hora
-    );
+    await onReservar(nombre, apellido, obraSocial, fechaFormateada, hora);
 
     setLoading(false);
-
-    setModal("✅ Turno reservado con éxito");
 
     setNombre("");
     setApellido("");
@@ -86,6 +69,9 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
 
   return (
     <div className="form-turnos">
+      <h2>📅 Reservar turno</h2>
+
+      <p className="turno-info">⏱ Turnos de 30 minutos</p>
 
       <input
         placeholder="👤 Nombre"
@@ -112,34 +98,28 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
 
       <DatePicker
         selected={fecha}
-        onChange={(date: Date | null) => {
-          if (!date) return;
-
-          const dia = date.getDay();
-
-          if (dia === 0 || dia === 6) {
-            setModal("❌ No atendemos sábados ni domingos");
-            return;
-          }
-
-          setFecha(date);
-        }}
+        onChange={(date: Date | null) => setFecha(date)}
         filterDate={(date) => {
-          const dia = date.getDay();
-          return dia !== 0 && dia !== 6;
+          const d = date.getDay();
+          return d !== 0 && d !== 6;
         }}
         minDate={new Date()}
         placeholderText="📅 Seleccionar fecha"
-        dateFormat="yyyy-MM-dd"
       />
 
-      <select value={hora} onChange={(e) => setHora(e.target.value)}>
-        <option value="">⏰ Horario</option>
-
+      {/* 🔥 HORARIOS PRO */}
+      <div className="horarios-grid">
         {horariosDisponibles.map((h) => (
-          <option key={h}>{h}</option>
+          <button
+            key={h}
+            type="button"
+            className={hora === h ? "hora active" : "hora"}
+            onClick={() => setHora(h)}
+          >
+            {h}
+          </button>
         ))}
-      </select>
+      </div>
 
       <button onClick={reservar} disabled={loading}>
         {loading ? "Reservando..." : "📅 Reservar turno"}
@@ -147,21 +127,6 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
 
       {error && <div className="error">{error}</div>}
       {mensaje && <div className="success">{mensaje}</div>}
-
-      {fecha && horariosDisponibles.length === 0 && (
-        <p style={{ color: "red" }}>
-          ❌ No hay horarios disponibles para este día
-        </p>
-      )}
-
-      {modal && (
-        <div className="modal">
-          <div className="modal-content">
-            <p>{modal}</p>
-            <button onClick={() => setModal("")}>Cerrar</button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
