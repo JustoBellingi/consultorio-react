@@ -91,94 +91,11 @@
 }
 
 /* Admin cards */
-.turno-card {
-  background: white;
-  padding: 15px;
-  border-radius: 15px;
-  margin-bottom: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease;
-}
-.turno-card:hover {
-  transform: scale(1.02);
-}
-
-button {
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-  border: none;
-  padding: 12px;
-  border-radius: 10px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-input, select {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  outline: none;
-  transition: 0.2s;
-}
-
-input:focus, select:focus {
-  border-color: #0072ff;
-  box-shadow: 0 0 5px rgba(0,114,255,0.3);
-}
-
-.success {
-  background: #d4edda;
-  color: #155724;
-  padding: 10px;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-
-.error {
-  background: #f8d7da;
-  color: #721c24;
-  padding: 10px;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-.form-turnos {
-  animation: fadeIn 0.5s ease;
-}
-
-button {
-  transition: all 0.2s ease;
-}
-
-button:hover {
-  transform: scale(1.05);
-}
-
-.turno-card {
-  animation: fadeUp 0.4s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 .turnos-page {
   min-height: 100vh;
   padding: 40px 20px;
   background: linear-gradient(135deg, #e0f7ff, #f0f4ff);
+  font-family: "Segoe UI", sans-serif;
 }
 
 /* GRID */
@@ -188,44 +105,55 @@ button:hover {
   gap: 40px;
   max-width: 1100px;
   margin: auto;
+  align-items: start;
 }
 
-/* FORM */
+/* IZQUIERDA (NO TOCAR FORM) */
 .turnos-left {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  display: flex;
 }
 
-/* INFO */
+/* DERECHA */
 .turnos-right {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 15px;
 }
 
 .turnos-right h2 {
-  margin-bottom: 15px;
   color: #1e3a8a;
+  font-size: 24px;
+}
+
+.turnos-desc {
+  color: #475569;
+  font-size: 14px;
 }
 
 .turnos-right ul {
-  margin-bottom: 20px;
+  padding-left: 20px;
+  color: #334155;
 }
 
+/* CARDS INFO */
 .info-card {
   background: white;
   padding: 15px;
   border-radius: 12px;
-  margin-bottom: 10px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  font-size: 14px;
+}
+
+.info-card.destacado {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-weight: 500;
 }
 
 /* ADMIN */
 .admin-panel {
   max-width: 800px;
-  margin: 50px auto;
+  margin: 60px auto;
 }
 
 .turno-card {
@@ -233,6 +161,17 @@ button:hover {
   padding: 15px;
   border-radius: 12px;
   margin-bottom: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+/* BOTÓN */
+button {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
 }
 
 /* WHATSAPP */

@@ -13,89 +13,84 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [obraSocial, setObraSocial] = useState("");
+  const [otraObra, setOtraObra] = useState("");
   const [fecha, setFecha] = useState<Date | null>(null);
   const [hora, setHora] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const horarios = Array.from({ length: 20 }, (_, i) => {
-    const h = Math.floor(i / 2) + 8;
-    const m = i % 2 === 0 ? "00" : "30";
-    return `${h.toString().padStart(2, "0")}:${m}`;
-  });
+  // 🔥 horarios SIN 12 y 13
+  const horarios = [
+    "08:00","08:30","09:00","09:30",
+    "10:00","10:30","11:00","11:30",
+    "14:00","14:30","15:00","15:30",
+    "16:00","16:30","17:00","17:30"
+  ];
 
   const fechaFormateada = fecha
     ? fecha.toISOString().split("T")[0]
     : "";
 
-  const ahora = new Date();
+  const horariosDisponibles = horarios.filter(
+    (h) =>
+      !turnosReservados.find(
+        (t) => t.fecha === fechaFormateada && t.hora === h
+      )
+  );
 
-  const horariosDisponibles = horarios.filter((h) => {
-    const ocupado = turnosReservados.find(
-      (t) => t.fecha === fechaFormateada && t.hora === h
-    );
+  const reservar = () => {
+    const obraFinal = obraSocial === "Otra" ? otraObra : obraSocial;
 
-    if (ocupado) return false;
+    if (!nombre || !apellido || !obraFinal || !fecha || !hora) return;
 
-    if (fecha) {
-      const hoy = new Date().toISOString().split("T")[0];
-
-      if (fechaFormateada === hoy) {
-        const [horaNum, min] = h.split(":").map(Number);
-        const fechaHora = new Date();
-        fechaHora.setHours(horaNum, min, 0, 0);
-
-        if (fechaHora < ahora) return false;
-      }
-    }
-
-    return true;
-  });
-
-  const reservar = async () => {
-    if (!nombre || !apellido || !obraSocial || !fecha || !hora) return;
-
-    if (loading) return;
-    setLoading(true);
-
-    await onReservar(nombre, apellido, obraSocial, fechaFormateada, hora);
-
-    setLoading(false);
+    onReservar(nombre, apellido, obraFinal, fechaFormateada, hora);
 
     setNombre("");
     setApellido("");
     setHora("");
     setFecha(null);
+    setOtraObra("");
   };
 
   return (
     <div className="form-turnos">
       <h2>📅 Reservar turno</h2>
 
-      <p className="turno-info">⏱ Turnos de 30 minutos</p>
-
       <input
-        placeholder="👤 Nombre"
+        placeholder="Nombre"
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
       />
 
       <input
-        placeholder="👤 Apellido"
+        placeholder="Apellido"
         value={apellido}
         onChange={(e) => setApellido(e.target.value)}
       />
 
+      {/* 🏥 OBRAS SOCIALES */}
       <select
         value={obraSocial}
         onChange={(e) => setObraSocial(e.target.value)}
       >
-        <option value="">🏥 Obra Social</option>
+        <option value="">Obra Social</option>
         <option>IOMA</option>
         <option>OSDE</option>
         <option>Swiss Medical</option>
-        <option>Particular</option>
+        <option>Galeno</option>
+        <option>Medifé</option>
+        <option>Prevención Salud</option>
+        <option>Omint</option>
+        <option>Otra</option>
       </select>
 
+      {obraSocial === "Otra" && (
+        <input
+          placeholder="Especificar obra social"
+          value={otraObra}
+          onChange={(e) => setOtraObra(e.target.value)}
+        />
+      )}
+
+      {/* 📅 FECHA */}
       <DatePicker
         selected={fecha}
         onChange={(date: Date | null) => setFecha(date)}
@@ -104,26 +99,18 @@ function Turnos({ onReservar, error, mensaje, turnosReservados }: Props) {
           return d !== 0 && d !== 6;
         }}
         minDate={new Date()}
-        placeholderText="📅 Seleccionar fecha"
+        placeholderText="Seleccionar fecha"
       />
 
-      {/* 🔥 HORARIOS PRO */}
-      <div className="horarios-grid">
+      {/* ⏰ HORARIOS (SELECT LIMPIO) */}
+      <select value={hora} onChange={(e) => setHora(e.target.value)}>
+        <option value="">Seleccionar horario</option>
         {horariosDisponibles.map((h) => (
-          <button
-            key={h}
-            type="button"
-            className={hora === h ? "hora active" : "hora"}
-            onClick={() => setHora(h)}
-          >
-            {h}
-          </button>
+          <option key={h}>{h}</option>
         ))}
-      </div>
+      </select>
 
-      <button onClick={reservar} disabled={loading}>
-        {loading ? "Reservando..." : "📅 Reservar turno"}
-      </button>
+      <button onClick={reservar}>Reservar turno</button>
 
       {error && <div className="error">{error}</div>}
       {mensaje && <div className="success">{mensaje}</div>}
