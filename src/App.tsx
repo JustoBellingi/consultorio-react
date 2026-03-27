@@ -12,6 +12,10 @@ import type { Turno } from "./types/Turno";
 import Footer from "./components/Footer";
 import Navbar from "./pages/Navbar";
 
+
+
+<link rel="icon" type="image/png" href="/logo.png" />
+
 function App() {
   const [turnosReservados, setTurnosReservados] = useState<Turno[]>([]);
   console.log(turnosReservados);
@@ -72,11 +76,10 @@ function App() {
 
       <a
         href="https://wa.me/5492216900406"
-        className="whatsapp"
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
+        className="whatsapp-float"
       >
-        💬
       </a>
 
       <Footer />
