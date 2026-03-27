@@ -14,7 +14,6 @@ import Navbar from "./pages/Navbar";
 
 
 
-<link rel="icon" type="image/png" href="/logo.png" />
 
 function App() {
   const [turnosReservados, setTurnosReservados] = useState<Turno[]>([]);
