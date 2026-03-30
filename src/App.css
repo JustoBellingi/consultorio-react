@@ -112,4 +112,33 @@
 /* ================= FIX NAVBAR ================= */
 body {
   padding-top: 80px;
+  overflow-x: hidden;
+}
+
+.card {
+  width: 90%;
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0px 10px 30px rgba(0,0,0,0.1);
+}
+
+.card button {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+.card h2 {
+  font-size: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 10px;
 }
