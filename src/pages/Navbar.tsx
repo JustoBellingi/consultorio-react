@@ -16,15 +16,19 @@ function Navbar() {
 
         {/* MENU */}
         <ul className={`nav-links ${menuAbierto ? "active" : ""}`}>
-          <li><Link to="/">Inicio</Link></li>
-          <li><Link to="/turnos">Turnos</Link></li>
-          <li><Link to="/servicios">Servicios</Link></li>
-          <li><Link to="/sobre">Sobre</Link></li>
-          <li><Link to="/contacto">Contacto</Link></li>
+          <li><Link to="/" onClick={() => setMenuAbierto(false)}>Inicio</Link></li>
+          <li><Link to="/turnos" onClick={() => setMenuAbierto(false)}>Turnos</Link></li>
+          <li><Link to="/servicios" onClick={() => setMenuAbierto(false)}>Servicios</Link></li>
+          <li><Link to="/sobre" onClick={() => setMenuAbierto(false)}>Sobre</Link></li>
+          <li><Link to="/contacto" onClick={() => setMenuAbierto(false)}>Contacto</Link></li>
 
           {/* CTA */}
           <li>
-            <Link to="/turnos" className="btn-turno">
+            <Link
+              to="/turnos"
+              className="btn-turno"
+              onClick={() => setMenuAbierto(false)}
+            >
               Reservar
             </Link>
           </li>

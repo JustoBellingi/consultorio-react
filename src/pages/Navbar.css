@@ -1,4 +1,4 @@
-/* NAVBAR GENERAL */
+/* NAVBAR */
 .navbar {
   position: relative;
   background: #0f172a;
@@ -55,8 +55,9 @@
 /* HAMBURGUESA */
 .menu-toggle {
   display: none;
-  font-size: 24px;
+  font-size: 26px;
   cursor: pointer;
+  z-index: 1000;
 }
 
 /* 📱 MOBILE */
@@ -70,8 +71,8 @@
     flex-direction: column;
     background: #1e293b;
     position: absolute;
-    top: 70px;
-    right: 0;
+    top: 60px;
+    right: 10px;
     width: 220px;
     padding: 15px;
     border-radius: 10px;
