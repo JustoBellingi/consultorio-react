@@ -1,13 +1,11 @@
+/* NAVBAR GENERAL */
 .navbar {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  background: rgba(15, 23, 42, 0.9);
-  backdrop-filter: blur(10px);
-  z-index: 1000;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  position: relative;
+  background: #0f172a;
+  color: white;
 }
 
+/* CONTENEDOR */
 .navbar-container {
   max-width: 1100px;
   margin: auto;
@@ -21,22 +19,20 @@
 .logo {
   font-weight: bold;
   font-size: 20px;
-  color: white;
 }
 
-/* LINKS */
+/* LINKS DESKTOP */
 .nav-links {
   display: flex;
-  gap: 25px;
+  gap: 15px;
   list-style: none;
-  align-items: center;
 }
 
 .nav-links a {
   color: #e2e8f0;
   text-decoration: none;
   font-size: 14px;
-  transition: all 0.2s ease;
+  transition: 0.2s;
 }
 
 .nav-links a:hover {
@@ -56,32 +52,33 @@
   background: #2563eb;
 }
 
-/* MENU MOBILE */
+/* HAMBURGUESA */
 .menu-toggle {
   display: none;
-  font-size: 22px;
-  color: white;
+  font-size: 24px;
   cursor: pointer;
 }
 
-/* RESPONSIVE */
+/* 📱 MOBILE */
 @media (max-width: 768px) {
+
+  .menu-toggle {
+    display: block;
+  }
+
   .nav-links {
+    flex-direction: column;
+    background: #1e293b;
     position: absolute;
     top: 70px;
     right: 0;
-    background: #0f172a;
-    flex-direction: column;
-    width: 200px;
-    padding: 20px;
+    width: 220px;
+    padding: 15px;
+    border-radius: 10px;
     display: none;
   }
 
   .nav-links.active {
     display: flex;
-  }
-
-  .menu-toggle {
-    display: block;
   }
 }
