@@ -1,116 +1,112 @@
+/* CONTENEDOR GENERAL */
+.contacto {
+  padding: 40px 20px;
+  background: linear-gradient(to bottom, #0f172a, #1e3a8a);
+  min-height: 100vh;
+  color: #1e293b;
+}
+
+/* WRAPPER */
 .contacto-container {
-  padding: 120px 10% 60px;
-}
-
-.contacto-container h1 {
-  text-align: center;
-  color: #0a3d62;
-  margin-bottom: 40px;
-  font-size: 2.5rem;
-  background-color: white;
-}
-
-.contacto-grid {
+  max-width: 1100px;
+  margin: auto;
   display: flex;
-  gap: 50px;
+  gap: 30px;
+  align-items: stretch;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
-.contacto-info {
-  flex: 1;
-  background: white;
-  padding: 30px;
+/* CARD */
+.card-contacto {
+  background: #f1f5f9;
+  padding: 25px;
   border-radius: 15px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-}
-
-.contacto-info h2 {
-  color: #0d6efd;
-  margin-bottom: 20px;
-}
-
-.contacto-info p {
-  margin-bottom: 10px;
-}
-
-.contacto-info ul {
-  margin-left: 20px;
-  margin-bottom: 20px;
-}
-
-.btn-contacto {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 12px 20px;
-  background-color: #25d366;
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.btn-contacto:hover {
-  background-color: #1ebe5d;
-}
-
-.contacto-mapa {
-  flex: 1;
-}
-
-.contacto-mapa iframe {
   width: 100%;
-  height: 100%;
-  min-height: 350px;
-  border-radius: 15px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  max-width: 420px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-.btn-contacto {
-  padding: 12px 18px;
+.card-contacto h2 {
+  color: #2563eb;
+  margin-bottom: 15px;
+}
+
+/* HORARIOS */
+.horarios ul {
+  padding-left: 18px;
+}
+
+/* BOTONES */
+.botones {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
   border-radius: 10px;
   text-decoration: none;
+  font-weight: bold;
   color: white;
-  font-weight: 500;
   transition: 0.2s;
 }
 
 .whatsapp {
-  background: #25d366;
+  background: #22c55e;
+}
+
+.whatsapp:hover {
+  background: #16a34a;
 }
 
 .email {
   background: #3b82f6;
 }
 
-.btn-contacto:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
+.email:hover {
+  background: #2563eb;
 }
 
-.contacto-botones {
-  display: flex;
-  gap: 10px;
+/* TEXTO FINAL */
+.respuesta {
   margin-top: 15px;
+  font-size: 14px;
+  color: #475569;
 }
 
-.contacto-extra {
-  margin-top: 15px;
-  color: #64748b;
-}
-.map-container {
+/* MAPA */
+.mapa {
   width: 100%;
-  height: 300px;
-  margin-top: 20px;
+  max-width: 500px;
+  height: 350px;
+  border-radius: 15px;
+  overflow: hidden;
 }
 
-.map-container iframe {
+.mapa iframe {
   width: 100%;
   height: 100%;
   border: 0;
 }
+
+/* 📱 MOBILE */
 @media (max-width: 768px) {
-  .map-container {
-    height: 250px;
+  .contacto-container {
+    flex-direction: column;
+    align-items: center;
   }
+
+  .mapa {
+    height: 300px;
+  }
+}
+
+/* 🔥 FIX GLOBAL (MUY IMPORTANTE) */
+html, body {
+  overflow-x: hidden;
 }
