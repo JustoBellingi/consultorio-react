@@ -34,56 +34,27 @@ function App() {
 }, []);
   return (
     <div>
-      <ChatBot />
+  <ChatBot />
 
-      <nav className="navbar">
-        <div className="logo">Odontología</div>
+  <Navbar />  {/* 👈 ACÁ */}
 
-        <ul className="nav-links">
-          <li>
-            <Link to="/">Inicio</Link>
-          </li>
+  <Routes>
+    <Route path="/" element={<Inicio />} />
+    <Route path="/turnos" element={<TurnosPage />} />
+    <Route path="/servicios" element={<Servicios />} />
+    <Route path="/sobre" element={<Sobre />} />
+    <Route path="/contacto" element={<Contacto />} />
+  </Routes>
 
-          <li>
-            <Link to="/turnos">Turnos</Link>
-          </li>
+  <a
+    href="https://wa.me/5492216900406"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="whatsapp-float"
+  ></a>
 
-          <li>
-            <Link to="/servicios">Servicios</Link>
-          </li>
-
-          <li>
-            <Link to="/sobre">Sobre Nosotros</Link>
-          </li>
-
-          <li>
-            <Link to="/contacto">Contacto</Link>
-          </li>
-        </ul>
-      </nav>
-
-      <Routes>
-        <Route path="/" element={<Inicio />} />
-
-        <Route path="/turnos" element={<TurnosPage />} />
-
-        <Route path="/servicios" element={<Servicios />} />
-        <Route path="/sobre" element={<Sobre />} />
-        <Route path="/contacto" element={<Contacto />} />
-        <Route path ="Navbar" element={<Navbar />} />
-      </Routes>
-
-      <a
-        href="https://wa.me/5492216900406"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="whatsapp-float"
-      >
-      </a>
-
-      <Footer />
-    </div>
+  <Footer />
+</div>
   );
 }
-
 export default App;
