@@ -98,3 +98,19 @@
   margin-top: 15px;
   color: #64748b;
 }
+.map-container {
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+@media (max-width: 768px) {
+  .map-container {
+    height: 250px;
+  }
+}
